@@ -147,14 +147,31 @@ function smoothScrollToBooking() {
 // 4. Custom Cursor
 const cursorDot = document.querySelector('.cursor-dot');
 const cursorCircle = document.querySelector('.cursor-circle');
-document.addEventListener('mousemove', (e) => {
-    gsap.to(cursorDot, { x: e.clientX, y: e.clientY, duration: 0.1 });
-    gsap.to(cursorCircle, { x: e.clientX, y: e.clientY, duration: 0.3 });
-});
-document.querySelectorAll('a, button, .hover-trigger').forEach(el => {
-    el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
-    el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
-});
+
+// Detect if device supports hover (not a touch device)
+const isTouchDevice = () => {
+    return (
+        (typeof window !== 'undefined' && navigator.maxTouchPoints > 0) ||
+        (typeof window !== 'undefined' && navigator.msMaxTouchPoints > 0)
+    );
+};
+
+// Only initialize custom cursor on non-touch devices
+if (!isTouchDevice()) {
+    document.addEventListener('mousemove', (e) => {
+        gsap.to(cursorDot, { x: e.clientX, y: e.clientY, duration: 0.1 });
+        gsap.to(cursorCircle, { x: e.clientX, y: e.clientY, duration: 0.3 });
+    });
+    
+    document.querySelectorAll('a, button, .hover-trigger').forEach(el => {
+        el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+        el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+    });
+} else {
+    // Hide cursor elements on touch devices
+    if (cursorDot) cursorDot.style.display = 'none';
+    if (cursorCircle) cursorCircle.style.display = 'none';
+}
 
 // Booking modal controls (with GSAP animations)
 const bookingModal = document.getElementById('bookingModal');
