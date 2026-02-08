@@ -114,6 +114,36 @@
         .line-reveal { overflow: hidden; }
         .line-reveal span { display: block; transform: translateY(100%); opacity: 0; transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1), opacity 1s ease; }
         .line-reveal.visible span { transform: translateY(0); opacity: 1; }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            height: 100vh;
+            background-color: #1B3B2F;
+            z-index: 60;
+            transition: right 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+        }
+        .mobile-menu.active {
+            right: 0;
+        }
+        .mobile-menu button {
+            color: white;
+            font-size: 1.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            transition: color 0.3s;
+        }
+        .mobile-menu button:hover {
+            color: #D95D39;
+        }
     </style>
 </head>
 <body class="font-sans antialiased">
@@ -143,6 +173,15 @@
          </div>
     </button>
 
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="mobile-menu">
+        <button onclick="closeMobileMenu(); transitionToPage('home');" class="mobile-link">Home</button>
+        <button onclick="closeMobileMenu(); transitionToPage('healing');" class="mobile-link">Healing</button>
+        <button onclick="closeMobileMenu(); transitionToPage('wellness');" class="mobile-link">Wellness</button>
+        <button onclick="closeMobileMenu(); transitionToPage('postnatal');" class="mobile-link">Post-Natal</button>
+        <button onclick="closeMobileMenu(); smoothScrollToBooking();" class="bg-brand-orange px-8 py-3 rounded-sm mobile-link">Book Now</button>
+    </div>
+
     <!-- Custom Cursor -->
     <div class="cursor-dot"></div>
     <div class="cursor-circle"></div>
@@ -168,7 +207,9 @@
             <button onclick="smoothScrollToBooking()" class="bg-brand-orange px-6 py-2 rounded-sm hover:bg-white hover:text-brand-orange transition-all hover-trigger">Book Now</button>
         </div>
         
-        <button class="md:hidden hover-trigger"><i data-lucide="menu" class="w-6 h-6"></i></button>
+        <button id="menuToggle" class="md:hidden hover-trigger" onclick="toggleMobileMenu()">
+            <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
     </nav>
 
     <!-- ============================================== -->
@@ -564,6 +605,32 @@
                 });
             }
         });
+
+        // 2b. Mobile Menu Functions
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const menuToggle = document.getElementById('menuToggle');
+            const icon = menuToggle.querySelector('svg');
+            
+            mobileMenu.classList.toggle('active');
+            
+            if (mobileMenu.classList.contains('active')) {
+                icon.setAttribute('data-lucide', 'x');
+            } else {
+                icon.setAttribute('data-lucide', 'menu');
+            }
+            lucide.createIcons();
+        }
+
+        function closeMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const menuToggle = document.getElementById('menuToggle');
+            const icon = menuToggle.querySelector('svg');
+            
+            mobileMenu.classList.remove('active');
+            icon.setAttribute('data-lucide', 'menu');
+            lucide.createIcons();
+        }
 
         // 3. Smooth Booking Scroll
         const lenis = new Lenis({ duration: 1.2, smooth: true });
