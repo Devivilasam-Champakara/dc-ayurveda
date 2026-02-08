@@ -506,7 +506,7 @@
     <!-- Booking Modal (Formspree) -->
     <div id="bookingModal" class="fixed inset-0 z-60 hidden items-center justify-center">
         <div id="modalOverlay" class="absolute inset-0 bg-black/50"></div>
-        <div class="relative bg-white w-full max-w-2xl mx-4 rounded-lg shadow-xl z-70 overflow-hidden">
+        <div id="bookingPanel" class="relative bg-white w-full max-w-2xl mx-4 rounded-lg shadow-xl z-70 overflow-hidden">
             <button id="closeBookingModal" aria-label="Close booking" class="absolute top-4 right-4 text-gray-600 hover:text-brand-orange text-2xl leading-none">&times;</button>
             <div class="p-8">
                 <h3 class="font-serif text-2xl mb-4">Book a Consultation</h3>
@@ -699,8 +699,10 @@
             el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
         });
         
-        // Booking modal controls
+        // Booking modal controls (with GSAP animations)
         const bookingModal = document.getElementById('bookingModal');
+        const bookingPanel = document.getElementById('bookingPanel');
+        const modalOverlay = document.getElementById('modalOverlay');
         const bookingForm = document.getElementById('bookingForm');
         const bookingStatus = document.getElementById('bookingStatus');
         const bookingError = document.getElementById('bookingError');
@@ -708,13 +710,34 @@
         function openBookingModal() {
             bookingStatus.classList.add('hidden');
             bookingError.classList.add('hidden');
+            // show container
             bookingModal.classList.remove('hidden');
             bookingModal.classList.add('flex');
+            // prevent background scroll
+            document.body.style.overflow = 'hidden';
+
+            // initial states
+            gsap.set(modalOverlay, { opacity: 0 });
+            gsap.set(bookingPanel, { y: 30, opacity: 0, scale: 0.98 });
+
+            // animate in overlay + panel
+            const tl = gsap.timeline();
+            tl.to(modalOverlay, { opacity: 1, duration: 0.24, ease: 'power1.out' })
+              .to(bookingPanel, { y: 0, opacity: 1, scale: 1, duration: 0.45, ease: 'power3.out' }, '-=0.12');
         }
 
         function closeBookingModal() {
-            bookingModal.classList.remove('flex');
-            bookingModal.classList.add('hidden');
+            // animate out, then hide
+            const tl = gsap.timeline({ onComplete: () => {
+                bookingModal.classList.remove('flex');
+                bookingModal.classList.add('hidden');
+                document.body.style.overflow = '';
+                gsap.set(modalOverlay, { opacity: 0 });
+                gsap.set(bookingPanel, { opacity: 0 });
+            }});
+
+            tl.to(bookingPanel, { y: 30, opacity: 0, scale: 0.98, duration: 0.28, ease: 'power3.in' })
+              .to(modalOverlay, { opacity: 0, duration: 0.2, ease: 'power1.in' }, '-=0.18');
         }
 
         document.getElementById('closeBookingModal').addEventListener('click', closeBookingModal);
