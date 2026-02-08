@@ -300,7 +300,7 @@
     <!-- ============================================== -->
     <!-- SUBPAGE 2: WELLNESS -->
     <!-- ============================================== -->
-    <main id="wellness" class="page-section">
+    <main id="wellness" class="page-section wrap-break-word break-all">
         <header class="h-[90vh] relative bg-brand-black flex items-center justify-center">
             <img src="https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?q=80&w=1935&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover opacity-70" alt="Munnar Resort">
             <div class="relative z-10 text-center text-white p-6">
@@ -408,12 +408,14 @@
     </main>
 
     <!-- Booking Modal (Formspree) -->
-    <div id="bookingModal" class="fixed inset-0 z-60 hidden items-center justify-center">
+    <div id="bookingModal" class="fixed inset-0 z-60 hidden items-center justify-center p-4">
         <div id="modalOverlay" class="absolute inset-0 bg-black/50"></div>
-        <div id="bookingPanel" class="relative bg-white w-full max-w-2xl mx-4 rounded-lg shadow-xl z-70 overflow-hidden">
-            <button id="closeBookingModal" aria-label="Close booking" class="absolute top-4 right-4 text-gray-600 hover:text-brand-orange text-2xl leading-none">&times;</button>
-            <div class="p-8">
-                <h3 class="font-serif text-2xl mb-4">Book a Consultation</h3>
+        <div id="bookingPanel" class="relative bg-white w-full max-w-2xl rounded-lg shadow-xl z-70 overflow-y-auto max-h-[90vh]">
+            <div class="p-6 pt-14 md:p-8 md:pt-8">
+                <div class="flex flex-row justify-between items-start items-center mb-8">
+                    <h3 class="font-serif text-2xl mb-4 text-center">Book a Consultation</h3>
+                    <button id="closeBookingModal" aria-label="Close booking" class="text-gray-600 hover:text-brand-orange text-2xl leading-none">&times;</button>
+                </div>
                 <form id="bookingForm" action="https://formspree.io/f/FORM_ID_HERE" method="POST">
                     <input type="hidden" name="_subject" value="New booking request">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

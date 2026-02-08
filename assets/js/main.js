@@ -156,8 +156,9 @@ const isTouchDevice = () => {
     );
 };
 
-// Only initialize custom cursor on non-touch devices
+// Initialize custom cursor based on device type
 if (!isTouchDevice()) {
+    // Desktop: show on mousemove
     document.addEventListener('mousemove', (e) => {
         gsap.to(cursorDot, { x: e.clientX, y: e.clientY, duration: 0.1 });
         gsap.to(cursorCircle, { x: e.clientX, y: e.clientY, duration: 0.3 });
@@ -167,10 +168,34 @@ if (!isTouchDevice()) {
         el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
         el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
     });
+    
+    // Keep cursors visible on desktop
+    if (cursorDot) cursorDot.style.opacity = '1';
+    if (cursorCircle) cursorCircle.style.opacity = '1';
 } else {
-    // Hide cursor elements on touch devices
-    if (cursorDot) cursorDot.style.display = 'none';
-    if (cursorCircle) cursorCircle.style.display = 'none';
+    // Mobile: start hidden, show on touch
+    if (cursorDot) cursorDot.style.opacity = '0';
+    if (cursorCircle) cursorCircle.style.opacity = '0';
+    
+    // Show cursor on touch
+    document.addEventListener('touchstart', (e) => {
+        const touch = e.touches[0];
+        gsap.to(cursorDot, { x: touch.clientX, y: touch.clientY, opacity: 1, duration: 0.2 });
+        gsap.to(cursorCircle, { x: touch.clientX, y: touch.clientY, opacity: 1, duration: 0.3 });
+    });
+    
+    // Update cursor position during touch
+    document.addEventListener('touchmove', (e) => {
+        const touch = e.touches[0];
+        gsap.to(cursorDot, { x: touch.clientX, y: touch.clientY, duration: 0.1 });
+        gsap.to(cursorCircle, { x: touch.clientX, y: touch.clientY, duration: 0.3 });
+    });
+    
+    // Hide cursor when touch ends
+    document.addEventListener('touchend', () => {
+        gsap.to(cursorDot, { opacity: 0, duration: 0.3 });
+        gsap.to(cursorCircle, { opacity: 0, duration: 0.3 });
+    });
 }
 
 // Booking modal controls (with GSAP animations)

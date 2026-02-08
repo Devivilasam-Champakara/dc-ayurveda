@@ -40,11 +40,12 @@ body {
 .cursor-dot, .cursor-circle {
     position: fixed; top: 0; left: 0; transform: translate(-50%, -50%);
     border-radius: 50%; pointer-events: none; z-index: 9999;
+    opacity: 1; transition: opacity 0.3s ease;
 }
 .cursor-dot { width: 8px; height: 8px; background-color: #D95D39; }
 .cursor-circle {
     width: 40px; height: 40px; border: 1px solid #1B3B2F;
-    transition: width 0.3s, height 0.3s, background-color 0.3s;
+    transition: width 0.3s, height 0.3s, background-color 0.3s, opacity 0.3s ease;
 }
 body.hovering .cursor-circle {
     width: 60px; height: 60px; border-color: #D95D39; background-color: rgba(217, 93, 57, 0.1);
@@ -97,7 +98,7 @@ html.lenis { height: auto; }
 .hero-video { width: 100%; height: 100%; object-fit: cover; }
 .img-hover { transition: transform 0.7s ease; }
 .group:hover .img-hover { transform: scale(1.05); }
-.line-reveal { overflow: hidden; }
+.line-reveal { overflow: visible; }
 .line-reveal span { display: block; transform: translateY(100%); opacity: 0; transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1), opacity 1s ease; }
 .line-reveal.visible span { transform: translateY(0); opacity: 1; }
 
