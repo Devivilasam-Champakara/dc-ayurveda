@@ -130,7 +130,7 @@
     <!-- Audio Element -->
     <audio id="bg-music" loop>
         <!-- Updated to a very calm, ambient track -->
-        <source src="https://cdn.pixabay.com/audio/2021/09/06/audio_9c05c03f6f.mp3" type="audio/mp3">
+        <source src="assets/music/background-music.mp3" type="audio/mp3">
     </audio>
 
     <!-- Audio Toggle Button -->
@@ -541,6 +541,11 @@
         const audioBtn = document.getElementById('audio-btn');
         const bgMusic = document.getElementById('bg-music');
         bgMusic.volume = 0; // Start silent
+
+        // Auto-play attempt (may be blocked by browser)
+        setTimeout(() => {
+            audioBtn.click(); // Simulate button click
+        }, 2500); // After loading screen
 
         audioBtn.addEventListener('click', () => {
             if (bgMusic.paused) {
