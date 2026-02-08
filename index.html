@@ -353,7 +353,7 @@
                 <div>
                     <h2 class="font-serif text-5xl mb-8">Start Your Journey</h2>
                     <p class="text-white/60 max-w-sm mb-10 text-lg font-light">For partnerships or bookings, contact us directly.</p>
-                    <button class="btn-action px-12 py-5 text-sm uppercase tracking-widest font-bold hover-trigger">Book Now</button>
+                    <button onclick="openBookingModal()" class="btn-action px-12 py-5 text-sm uppercase tracking-widest font-bold hover-trigger">Book Now</button>
                 </div>
                 <div class="grid grid-cols-2 gap-12 text-sm text-white/70">
                     <div>
@@ -502,6 +502,43 @@
             </div>
         </section>
     </main>
+
+    <!-- Booking Modal (Formspree) -->
+    <div id="bookingModal" class="fixed inset-0 z-60 hidden items-center justify-center">
+        <div id="modalOverlay" class="absolute inset-0 bg-black/50"></div>
+        <div class="relative bg-white w-full max-w-2xl mx-4 rounded-lg shadow-xl z-70 overflow-hidden">
+            <button id="closeBookingModal" aria-label="Close booking" class="absolute top-4 right-4 text-gray-600 hover:text-brand-orange text-2xl leading-none">&times;</button>
+            <div class="p-8">
+                <h3 class="font-serif text-2xl mb-4">Book a Consultation</h3>
+                <form id="bookingForm" action="https://formspree.io/f/FORM_ID_HERE" method="POST">
+                    <input type="hidden" name="_subject" value="New booking request">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input required name="name" placeholder="Full name" class="p-3 border rounded" />
+                        <input required type="email" name="email" placeholder="Email" class="p-3 border rounded" />
+                        <input required name="phone" placeholder="Phone" class="p-3 border rounded" />
+                        <input type="date" name="date" class="p-3 border rounded" />
+                    </div>
+                    <div class="mt-4">
+                        <select name="package" class="p-3 border rounded w-full">
+                            <option value="">Select package (optional)</option>
+                            <option value="Panchakarma">Panchakarma</option>
+                            <option value="Rasayana">Rasayana</option>
+                            <option value="Detox Week">Detox Week</option>
+                        </select>
+                    </div>
+                    <div class="mt-4">
+                        <textarea name="message" rows="4" placeholder="Message" class="p-3 border rounded w-full"></textarea>
+                    </div>
+                    <div class="mt-6 flex gap-4 items-center">
+                        <button type="submit" class="btn-action px-6 py-3">Send Booking</button>
+                        <div id="bookingStatus" class="text-sm text-green-600 hidden">Thanks — we'll be in touch.</div>
+                        <div id="bookingError" class="text-sm text-red-600 hidden">Something went wrong. Try again.</div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Logic -->
     <script>
@@ -661,7 +698,66 @@
             el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
             el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
         });
+        
+        // Booking modal controls
+        const bookingModal = document.getElementById('bookingModal');
+        const bookingForm = document.getElementById('bookingForm');
+        const bookingStatus = document.getElementById('bookingStatus');
+        const bookingError = document.getElementById('bookingError');
 
+        function openBookingModal() {
+            bookingStatus.classList.add('hidden');
+            bookingError.classList.add('hidden');
+            bookingModal.classList.remove('hidden');
+            bookingModal.classList.add('flex');
+        }
+
+        function closeBookingModal() {
+            bookingModal.classList.remove('flex');
+            bookingModal.classList.add('hidden');
+        }
+
+        document.getElementById('closeBookingModal').addEventListener('click', closeBookingModal);
+        document.getElementById('modalOverlay').addEventListener('click', closeBookingModal);
+
+        // // Hook any "Book Now" buttons on the page to open the modal
+        // document.querySelectorAll('button').forEach(btn => {
+        //     const txt = (btn.textContent || '').trim().toLowerCase();
+        //     if (txt.includes('book now') || txt === 'book now') {
+        //         btn.addEventListener('click', (e) => {
+        //             e.preventDefault();
+        //             openBookingModal();
+        //         });
+        //     }
+        // });
+
+        // Formspree async submit (no page reload)
+        bookingForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            bookingStatus.classList.add('hidden');
+            bookingError.classList.add('hidden');
+
+            const action = bookingForm.action;
+            const data = new FormData(bookingForm);
+
+            fetch(action, {
+                method: 'POST',
+                body: data,
+                headers: { 'Accept': 'application/json' }
+            }).then(response => {
+                if (response.ok) {
+                    bookingStatus.classList.remove('hidden');
+                    bookingForm.reset();
+                    setTimeout(() => { closeBookingModal(); }, 2000);
+                } else {
+                    response.json().then(err => {
+                        bookingError.classList.remove('hidden');
+                    }).catch(() => bookingError.classList.remove('hidden'));
+                }
+            }).catch(() => {
+                bookingError.classList.remove('hidden');
+            });
+        });
     </script>
 </body>
 </html>
