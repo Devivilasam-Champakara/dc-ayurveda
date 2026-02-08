@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,9 +7,12 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
+    
+    <!-- GSAP & Lenis for Smooth Motion -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <script>
@@ -18,514 +21,573 @@
                 extend: {
                     colors: {
                         brand: {
-                            black: '#1a1a1a',      // Dark charcoal from palette
-                            green: '#1B3B2F',      // Deep forest green
-                            sage: '#98A692',       // Muted olive/sage
-                            terra: '#B57056',      // Terracotta accent
-                            cream: '#F4F1EA',      // Background cream
-                            white: '#FFFFFF',
-                            light: '#FAF9F6'
+                            black: '#121212',
+                            dark: '#1B3B2F',       
+                            sage: '#98A692',       
+                            cream: '#F4F1EA',      
+                            orange: '#D95D39',     
+                            stone: '#E5E2DD',
+                            white: '#FFFFFF'
                         }
                     },
                     fontFamily: {
                         serif: ['"Playfair Display"', 'serif'],
                         sans: ['"Manrope"', 'sans-serif'],
                     },
-                    backgroundImage: {
-                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                    letterSpacing: {
+                        'widest-xl': '0.25em',
+                    },
+                    fontSize: {
+                        'display': ['clamp(3rem, 6vw, 6rem)', { lineHeight: '1.05' }],
                     }
                 }
             }
         }
     </script>
     <style>
-        body {
-            background-color: #F4F1EA;
-            color: #1a1a1a;
-            overflow-x: hidden;
-        }
+        body { background-color: #F4F1EA; color: #121212; cursor: none; } 
         
-        /* Custom Smooth Scroll behavior */
-        html {
-            scroll-behavior: smooth;
+        /* Page Sections */
+        .page-section { display: none; opacity: 0; }
+        .page-section.active { display: block; opacity: 1; }
+
+        /* Architectural Grid */
+        .arch-grid {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            pointer-events: none; z-index: 0;
+            display: grid; grid-template-columns: repeat(6, 1fr);
+            padding: 0 2rem;
+        }
+        .arch-line { border-right: 1px solid rgba(27, 59, 47, 0.05); height: 100%; }
+
+        /* Custom Cursor */
+        .cursor-dot, .cursor-circle {
+            position: fixed; top: 0; left: 0; transform: translate(-50%, -50%);
+            border-radius: 50%; pointer-events: none; z-index: 9999;
+        }
+        .cursor-dot { width: 8px; height: 8px; background-color: #D95D39; }
+        .cursor-circle {
+            width: 40px; height: 40px; border: 1px solid #1B3B2F;
+            transition: width 0.3s, height 0.3s, background-color 0.3s;
+        }
+        body.hovering .cursor-circle {
+            width: 60px; height: 60px; border-color: #D95D39; background-color: rgba(217, 93, 57, 0.1);
         }
 
-        .text-reveal {
-            clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+        /* Loading Screen (Curtain) */
+        #global-loader {
+            position: fixed; inset: 0; z-index: 100;
+            background-color: #1B3B2F; /* Brand Dark */
+            display: flex; justify-content: center; align-items: center;
+            transform: translateY(0); /* Start visible */
         }
+        .loader-content { text-align: center; color: #F4F1EA; }
+        .loader-line { width: 0; height: 1px; background-color: #D95D39; margin: 20px auto 0; }
 
-        .hover-reveal-image {
-            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+        /* Audio Toggle */
+        .audio-toggle {
+            position: fixed; bottom: 40px; right: 40px; z-index: 50;
+            width: 48px; height: 48px; border-radius: 50%;
+            background: rgba(27, 59, 47, 0.1); backdrop-filter: blur(10px);
+            border: 1px solid rgba(27, 59, 47, 0.2);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s ease; color: #1B3B2F;
         }
+        .audio-toggle:hover { background: #1B3B2F; color: #D95D39; }
+        .audio-bars { display: flex; align-items: flex-end; gap: 3px; height: 16px; }
+        .bar { width: 3px; background-color: currentColor; animation: equalize 1s infinite alternate; }
+        .paused .bar { animation: none; height: 3px !important; }
+        @keyframes equalize { 0% { height: 20%; } 100% { height: 100%; } }
 
-        .treatment-card:hover .treatment-overlay {
-            opacity: 1;
-        }
-
-        /* Architectural lines */
-        .arch-line {
-            width: 1px;
-            background-color: rgba(27, 59, 47, 0.1); 
-            height: 100%;
-            position: absolute;
-            top: 0;
-            z-index: 0;
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #F4F1EA; 
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #98A692; 
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #1B3B2F; 
-        }
-
-        .loader-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #1B3B2F;
-            z-index: 9999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1);
-        }
+        /* Lenis & Layout */
+        html.lenis { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto; }
+        .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+        .lenis.lenis-stopped { overflow: hidden; }
+        .lenis.lenis-scrolling iframe { pointer-events: none; }
+        
+        .btn-action { position: relative; overflow: hidden; transition: all 0.4s ease; background-color: #D95D39; color: white; }
+        .btn-action:hover { background-color: #b94a2b; transform: translateY(-2px); }
+        .hero-video { width: 100%; height: 100%; object-fit: cover; }
+        .img-hover { transition: transform 0.7s ease; }
+        .group:hover .img-hover { transform: scale(1.05); }
+        .line-reveal { overflow: hidden; }
+        .line-reveal span { display: block; transform: translateY(100%); opacity: 0; transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1), opacity 1s ease; }
+        .line-reveal.visible span { transform: translateY(0); opacity: 1; }
     </style>
 </head>
-<body class="font-sans antialiased selection:bg-brand-terra selection:text-white">
+<body class="font-sans antialiased">
 
-    <!-- Loading Screen -->
-    <div id="loader" class="loader-screen">
-        <div class="text-brand-cream font-serif text-3xl md:text-5xl italic opacity-0" id="loader-text">
-            Devivilasam Champakara
+    <!-- Global Loader (The Curtain) -->
+    <div id="global-loader">
+        <div class="loader-content">
+            <span class="font-serif text-3xl md:text-5xl italic tracking-tight block mb-2 opacity-0 loader-text">Devivilasam</span>
+            <span class="text-[10px] uppercase tracking-[0.3em] block opacity-0 loader-sub">Heritage & Healing</span>
+            <div class="loader-line"></div>
         </div>
     </div>
 
+    <!-- Audio Element -->
+    <audio id="bg-music" loop>
+        <!-- Updated to a very calm, ambient track -->
+        <source src="https://cdn.pixabay.com/audio/2021/09/06/audio_9c05c03f6f.mp3" type="audio/mp3">
+    </audio>
+
+    <!-- Audio Toggle Button -->
+    <button id="audio-btn" class="audio-toggle paused hover-trigger" aria-label="Toggle Sound">
+         <div class="audio-bars">
+             <div class="bar" style="animation-delay: -0.4s"></div>
+             <div class="bar" style="animation-delay: -0.2s"></div>
+             <div class="bar" style="animation-delay: -0.6s"></div>
+             <div class="bar" style="animation-delay: -0.8s"></div>
+         </div>
+    </button>
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-circle"></div>
+
+    <!-- Architectural Background Lines -->
+    <div class="arch-grid hidden md:grid">
+        <div class="arch-line"></div><div class="arch-line"></div><div class="arch-line"></div>
+        <div class="arch-line"></div><div class="arch-line"></div><div class="arch-line" style="border: none;"></div>
+    </div>
+
     <!-- Navigation -->
-    <nav class="fixed w-full z-50 px-6 py-6 md:px-12 transition-all duration-300" id="navbar">
-        <div class="flex justify-between items-center max-w-screen-2xl mx-auto">
-            <a href="#" class="text-brand-green font-serif font-bold text-xl md:text-2xl tracking-tight z-50 mix-blend-difference text-white">
-                DC Ayurveda.
-            </a>
-            <div class="hidden md:flex gap-8 items-center mix-blend-difference text-white z-50">
-                <a href="#legacy" class="text-xs uppercase tracking-[0.2em] hover:text-brand-terra transition-colors">Legacy</a>
-                <a href="#destinations" class="text-xs uppercase tracking-[0.2em] hover:text-brand-terra transition-colors">Destinations</a>
-                <a href="#clinical" class="text-xs uppercase tracking-[0.2em] hover:text-brand-terra transition-colors">Wellness</a>
-                <a href="#contact" class="px-6 py-2 border border-current rounded-full text-xs uppercase tracking-widest hover:bg-white hover:text-brand-black transition-all">Inquire</a>
-            </div>
-            <button class="md:hidden z-50 text-white mix-blend-difference">
-                <i data-lucide="menu" class="w-6 h-6"></i>
-            </button>
+    <nav class="fixed w-full z-50 px-6 py-6 md:px-12 flex justify-between items-center bg-brand-dark/95 backdrop-blur-md text-white border-b border-white/10 shadow-lg transition-transform duration-500" id="main-nav">
+        <div class="cursor-pointer hover-trigger" onclick="transitionToPage('home')">
+            <span class="font-serif font-bold text-xl tracking-tight block">DC Ayurveda.</span>
+            <span class="text-[10px] uppercase tracking-widest opacity-80 block mt-1">Heritage & Healing</span>
         </div>
+        
+        <div class="hidden md:flex gap-8 text-[11px] uppercase tracking-widest font-medium items-center">
+            <button onclick="transitionToPage('home')" class="hover:text-brand-orange transition-colors hover-trigger">Home</button>
+            <button onclick="transitionToPage('healing')" class="hover:text-brand-orange transition-colors hover-trigger">Healing</button>
+            <button onclick="transitionToPage('wellness')" class="hover:text-brand-orange transition-colors hover-trigger">Wellness</button>
+            <button onclick="transitionToPage('postnatal')" class="hover:text-brand-orange transition-colors hover-trigger">Post-Natal</button>
+            <button onclick="smoothScrollToBooking()" class="bg-brand-orange px-6 py-2 rounded-sm hover:bg-white hover:text-brand-orange transition-all hover-trigger">Book Now</button>
+        </div>
+        
+        <button class="md:hidden hover-trigger"><i data-lucide="menu" class="w-6 h-6"></i></button>
     </nav>
 
-    <!-- 1. Hero Section: The First Breath -->
-    <header class="relative w-full h-screen overflow-hidden flex items-center justify-center">
-        <!-- Cinematic Background (Simulated Video) -->
-        <div class="absolute inset-0 z-0">
-            <img src="https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?q=80&w=2070&auto=format&fit=crop" 
-                 alt="Munnar Landscape" 
-                 class="w-full h-full object-cover scale-110 animate-kenburns opacity-90"
-                 style="animation: kenburns 20s infinite alternate ease-in-out;">
-            <div class="absolute inset-0 bg-brand-green/30 mix-blend-multiply"></div>
-            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-brand-cream"></div>
-        </div>
-
-        <div class="relative z-10 text-center max-w-4xl px-4 mt-20">
-            <p class="text-white/90 uppercase tracking-[0.3em] text-xs md:text-sm mb-6 hero-anim">Est. 1948 • Kerala, India</p>
-            <h1 class="font-serif text-5xl md:text-7xl lg:text-8xl text-brand-cream mb-6 leading-[1.1] hero-anim">
-                Heritage <span class="italic font-light">Meets</span> Healing
-            </h1>
-            <p class="text-brand-cream/90 text-lg md:text-xl font-light max-w-2xl mx-auto leading-relaxed hero-anim">
-                A legacy of authentic wellness tailored for the modern spirit, set across Kerala’s most serene landscapes.
-            </p>
-            
-            <div class="mt-12 hero-anim">
-                <a href="#legacy" class="group inline-flex items-center gap-2 text-white border-b border-white/30 pb-1 hover:border-white transition-all duration-300">
-                    <span class="uppercase tracking-widest text-xs">Explore the Lineage</span>
-                    <i data-lucide="arrow-down" class="w-4 h-4 group-hover:translate-y-1 transition-transform"></i>
-                </a>
+    <!-- ============================================== -->
+    <!-- HOME PAGE -->
+    <!-- ============================================== -->
+    <main id="home" class="page-section active">
+        <!-- Hero -->
+        <header class="relative w-full h-screen overflow-hidden bg-brand-black">
+            <div class="absolute inset-0 z-0">
+                <video autoplay muted loop playsinline class="hero-video opacity-80" data-speed="0.5">
+                    <source src="https://videos.pexels.com/video-files/3195804/3195804-uhd_2560_1440_25fps.mp4" type="video/mp4">
+                </video>
+                <div class="absolute inset-0 bg-gradient-to-t from-brand-dark/90 via-transparent to-black/30"></div>
             </div>
-        </div>
-    </header>
+            <div class="relative z-10 h-full flex flex-col justify-end pb-32 px-6 md:px-12 max-w-7xl mx-auto">
+                <p class="text-brand-orange text-xs uppercase tracking-widest-xl mb-4 reveal-text">Est. 1948 • Kerala</p>
+                <h1 class="font-serif text-display text-white leading-none mb-6">
+                    <div class="line-reveal"><span>A Practice Shaped</span></div>
+                    <div class="line-reveal"><span>by <i class="text-brand-sage">Time.</i></span></div>
+                </h1>
+                <p class="text-white/80 max-w-xl text-lg font-light reveal-text delay-200">
+                    Preserving Ayurveda through responsible practice. Authentic, disciplined, and ethically tailored for the modern spirit.
+                </p>
+            </div>
+        </header>
 
-    <!-- 2. The Legacy & Philosophy -->
-    <section id="legacy" class="relative py-24 md:py-32 px-6 md:px-12 bg-brand-cream overflow-hidden">
-        <!-- Architectural Grid Lines -->
-        <div class="arch-line left-12 md:left-24"></div>
-        <div class="arch-line right-12 md:right-24"></div>
-
-        <div class="max-w-6xl mx-auto relative z-10 grid md:grid-cols-2 gap-16 items-center">
-            <div class="order-2 md:order-1 reveal-text">
-                <div class="flex items-center gap-4 mb-8">
-                    <div class="h-[1px] w-12 bg-brand-terra"></div>
-                    <span class="text-brand-terra uppercase tracking-widest text-xs font-semibold">The Foundation</span>
-                </div>
-                <h2 class="font-serif text-4xl md:text-6xl text-brand-green mb-8 leading-tight">
-                    Ancestral Wisdom, <br> <span class="italic text-brand-sage">Scientific Precision.</span>
+        <!-- Legacy -->
+        <section class="py-24 px-6 md:px-12 relative bg-brand-cream">
+            <div class="max-w-4xl mx-auto text-center" data-speed="0.9">
+                <span class="text-brand-orange text-xs uppercase tracking-widest font-bold mb-6 block reveal-on-scroll">Our Legacy</span>
+                <h2 class="font-serif text-4xl md:text-5xl text-brand-dark mb-8 leading-tight reveal-on-scroll">
+                    "To practice Ayurveda as a complete and disciplined system of health."
                 </h2>
-                <p class="text-brand-black/70 leading-relaxed mb-8 text-lg font-light">
-                    Devivilasam Champakara is not merely a spa; it is a custodian of lineage. For generations, we have maintained the delicate equilibrium between nature's raw potency and the body's innate ability to heal.
+                <div class="w-24 h-[1px] bg-brand-orange mx-auto mb-8"></div>
+                <p class="text-brand-black/70 text-lg font-light leading-relaxed reveal-on-scroll">
+                    Founded on generations of knowledge refined through decades of clinical practice. Rooted in classical principles, representing continuity, discipline, and ethical care.
                 </p>
-                <p class="text-brand-black/70 leading-relaxed mb-10 text-lg font-light">
-                    Our methodology respects the ancient texts while embracing the comforts required by the discerning global citizen.
-                </p>
-                
-                <div class="grid grid-cols-2 gap-8 border-t border-brand-green/10 pt-8">
-                    <div>
-                        <span class="block font-serif text-3xl text-brand-green mb-1">75+</span>
-                        <span class="text-xs uppercase tracking-widest text-brand-sage">Years Legacy</span>
-                    </div>
-                    <div>
-                        <span class="block font-serif text-3xl text-brand-green mb-1">100%</span>
-                        <span class="text-xs uppercase tracking-widest text-brand-sage">Authentic Protocols</span>
-                    </div>
-                </div>
             </div>
+        </section>
 
-            <div class="order-1 md:order-2 relative reveal-image">
-                <div class="relative z-10">
-                    <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=1887&auto=format&fit=crop" 
-                         alt="Ayurvedic Oils" 
-                         class="w-full h-[600px] object-cover rounded-sm shadow-2xl grayscale-[20%] sepia-[10%]">
+        <!-- Destinations -->
+        <section class="py-24 bg-brand-stone border-y border-brand-dark/10">
+            <div class="max-w-7xl mx-auto px-6 md:px-12">
+                <div class="text-center mb-16">
+                    <span class="text-brand-dark text-xs uppercase tracking-widest font-bold">Our Destinations</span>
                 </div>
-                <!-- Asymmetrical Element -->
-                <div class="absolute -bottom-12 -left-12 w-64 h-64 bg-brand-green p-8 z-20 hidden md:flex flex-col justify-center">
-                    <i data-lucide="flower-2" class="text-brand-terra w-8 h-8 mb-4"></i>
-                    <p class="text-brand-cream font-serif italic text-xl">"Healing begins when the mind surrenders to nature."</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 3. The Portfolio: Destinations -->
-    <section id="destinations" class="py-24 bg-brand-black text-brand-cream relative">
-        <div class="max-w-7xl mx-auto px-6 md:px-12">
-            <div class="mb-16 md:flex justify-between items-end">
-                <div>
-                    <h2 class="font-serif text-4xl md:text-5xl mb-2">Our Sanctuaries</h2>
-                    <p class="text-brand-sage font-light">Select your path to restoration.</p>
-                </div>
-                <div class="hidden md:block text-right">
-                     <span class="text-xs uppercase tracking-widest border-b border-brand-terra pb-1">View All Locations</span>
-                </div>
-            </div>
-
-            <div class="grid md:grid-cols-2 gap-4 h-[80vh] md:h-[600px]">
-                
-                <!-- Location 1 -->
-                <div class="group relative overflow-hidden cursor-pointer border border-white/10">
-                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-60 group-hover:opacity-80"
-                         style="background-image: url('https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=2070&auto=format&fit=crop');">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Kottayam -->
+                    <div class="group relative h-[600px] overflow-hidden cursor-pointer hover-trigger" onclick="transitionToPage('healing')">
+                        <div class="overflow-hidden h-full w-full">
+                            <img src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?q=80&w=1932&auto=format&fit=crop" 
+                                 class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="Kottayam">
+                        </div>
+                        <div class="absolute inset-0 bg-brand-dark/40 group-hover:bg-brand-dark/20 transition-all duration-500"></div>
+                        <div class="absolute bottom-0 left-0 p-10 w-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                            <h3 class="font-serif text-4xl text-white mb-2">Devivilasam Kottayam</h3>
+                            <p class="text-white/80 text-sm mb-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">Heritage Healing & Roots</p>
+                            <span class="text-brand-orange text-xs uppercase tracking-widest font-bold border-b border-brand-orange pb-1">Explore Healing -></span>
+                        </div>
                     </div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
-                    
-                    <div class="absolute bottom-0 left-0 p-8 md:p-12 w-full">
-                        <span class="text-brand-terra text-xs uppercase tracking-[0.2em] mb-2 block">The Heritage</span>
-                        <h3 class="font-serif text-3xl md:text-4xl mb-4 text-white group-hover:translate-x-2 transition-transform">Devivilasam Kottayam</h3>
-                        <p class="text-white/70 font-light max-w-md h-0 overflow-hidden group-hover:h-auto group-hover:opacity-100 opacity-0 transition-all duration-500">
-                            Where it all began. Deepen your connection to the roots of Ayurveda in our ancestral home, surrounded by backwaters and tradition.
-                        </p>
-                        <div class="mt-6 flex items-center gap-2 text-sm text-white opacity-0 group-hover:opacity-100 transition-opacity delay-100">
-                            <span>Explore Location</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    <!-- Munnar -->
+                    <div class="group relative h-[600px] overflow-hidden cursor-pointer hover-trigger" onclick="transitionToPage('wellness')">
+                        <div class="overflow-hidden h-full w-full">
+                            <img src="https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?q=80&w=1935&auto=format&fit=crop" 
+                                 class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="Munnar">
+                        </div>
+                        <div class="absolute inset-0 bg-brand-dark/40 group-hover:bg-brand-dark/20 transition-all duration-500"></div>
+                        <div class="absolute bottom-0 left-0 p-10 w-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                            <h3 class="font-serif text-4xl text-white mb-2">AyurSanctuary Munnar</h3>
+                            <p class="text-white/80 text-sm mb-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">Luxury Wellness Resort</p>
+                            <span class="text-brand-orange text-xs uppercase tracking-widest font-bold border-b border-brand-orange pb-1">Explore Wellness -></span>
                         </div>
                     </div>
                 </div>
+            </div>
+        </section>
 
-                <!-- Location 2 -->
-                <div class="group relative overflow-hidden cursor-pointer border border-white/10">
-                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-60 group-hover:opacity-80"
-                         style="background-image: url('https://images.unsplash.com/photo-1470115636492-6d2b56f9146d?q=80&w=2070&auto=format&fit=crop');">
-                    </div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
-                    
-                    <div class="absolute bottom-0 left-0 p-8 md:p-12 w-full">
-                        <span class="text-brand-sage text-xs uppercase tracking-[0.2em] mb-2 block">The Elevation</span>
-                        <h3 class="font-serif text-3xl md:text-4xl mb-4 text-white group-hover:translate-x-2 transition-transform">AyurSanctuary Munnar</h3>
-                        <p class="text-white/70 font-light max-w-md h-0 overflow-hidden group-hover:h-auto group-hover:opacity-100 opacity-0 transition-all duration-500">
-                            Mist-clad mountains and absolute silence. A modern retreat designed for deep cellular restoration and mental clarity.
-                        </p>
-                        <div class="mt-6 flex items-center gap-2 text-sm text-white opacity-0 group-hover:opacity-100 transition-opacity delay-100">
-                            <span>Explore Location</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        <!-- Testimonials -->
+        <section class="py-32 bg-brand-dark text-brand-cream relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-white/5 rounded-full blur-[120px]"></div>
+            <div class="max-w-4xl mx-auto px-6 text-center relative z-10" data-speed="1.1">
+                <i data-lucide="quote" class="w-12 h-12 text-brand-orange mx-auto mb-8 opacity-80"></i>
+                <h3 class="font-serif text-4xl md:text-5xl leading-tight mb-12">
+                    "The clarity of diagnosis and the calm treatment environment were unlike anything I've experienced. Truly authentic."
+                </h3>
+                <div class="flex flex-col items-center gap-1">
+                    <p class="font-bold text-lg">Dr. Elena R.</p>
+                    <p class="text-brand-sage text-sm uppercase tracking-widest">Switzerland</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Post Natal -->
+        <section class="relative h-[80vh] flex items-center justify-center cursor-pointer group hover-trigger" onclick="transitionToPage('postnatal')">
+            <div class="absolute inset-0 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1555252333-9f8e92e65df9?q=80&w=2070&auto=format&fit=crop" 
+                     class="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 transform scale-100 group-hover:scale-105" alt="Mother and Child">
+            </div>
+            <div class="absolute inset-0 bg-brand-black/60 group-hover:bg-brand-black/40 transition-colors duration-700"></div>
+            <div class="relative z-10 text-center text-white p-12 border border-white/20 backdrop-blur-sm group-hover:backdrop-blur-none transition-all">
+                <span class="bg-brand-orange px-3 py-1 text-[10px] uppercase tracking-widest font-bold mb-4 inline-block">Specialized Care</span>
+                <h2 class="font-serif text-5xl md:text-7xl mb-6">Post-Natal Care</h2>
+                <button class="border border-white px-8 py-3 text-xs uppercase tracking-widest hover:bg-white hover:text-brand-dark transition-all">View Package</button>
+            </div>
+        </section>
+
+        <!-- Treatments & Booking -->
+        <section class="py-24 px-6 md:px-12 bg-white">
+            <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-16">
+                <div>
+                    <span class="text-brand-orange text-xs uppercase tracking-widest font-bold mb-6 block">Clinical Excellence</span>
+                    <h3 class="font-serif text-3xl text-brand-dark mb-8">Our Treatments</h3>
+                    <ul class="space-y-6">
+                        <li class="flex justify-between items-center border-b border-gray-100 pb-4 hover:text-brand-orange cursor-pointer transition-colors group">
+                            <span class="font-serif text-2xl text-brand-black group-hover:text-brand-orange">Panchakarma</span>
+                            <span class="text-xs text-gray-500 uppercase tracking-widest">Detox</span>
+                        </li>
+                        <li class="flex justify-between items-center border-b border-gray-100 pb-4 hover:text-brand-orange cursor-pointer transition-colors group">
+                            <span class="font-serif text-2xl text-brand-black group-hover:text-brand-orange">Rasayana</span>
+                            <span class="text-xs text-gray-500 uppercase tracking-widest">Rejuvenation</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="bg-brand-cream p-12 border border-brand-dark/10 flex flex-col justify-center relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-brand-orange/5 rounded-full blur-3xl"></div>
+                    <h3 class="font-serif text-3xl text-brand-dark mb-2">Consult Our Vaidyas</h3>
+                    <p class="text-brand-black/60 text-sm mb-10">Schedule a private consultation.</p>
+                    <div class="space-y-8">
+                        <div>
+                            <p class="text-xs uppercase tracking-widest text-brand-sage mb-2">Appointment Line</p>
+                            <p class="font-serif text-4xl text-brand-black hover:text-brand-orange transition-colors cursor-pointer">+91 481 234 5678</p>
                         </div>
                     </div>
                 </div>
-
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- 4. Sub-Brand Reveal: Minimal & Modern -->
-    <section class="py-24 bg-white">
-        <div class="max-w-screen-xl mx-auto px-6 md:px-12 text-center">
-            <div class="inline-block mb-6">
-                 <img src="https://api.iconify.design/ph:plant-thin.svg?color=%231b3b2f" class="w-12 h-12 mx-auto mb-4 opacity-80" alt="icon">
-            </div>
-            <h2 class="font-sans font-light text-5xl md:text-7xl text-brand-green mb-6 tracking-tight">AyurSanctuary<span class="text-brand-terra">.</span></h2>
-            <p class="text-xl md:text-2xl font-serif italic text-brand-sage mb-12">"The modern evolution of ancient healing."</p>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-left mt-16">
-                <div class="p-8 bg-brand-light rounded-sm hover:shadow-lg transition-shadow duration-300">
-                    <i data-lucide="sparkles" class="w-8 h-8 text-brand-terra mb-4"></i>
-                    <h4 class="font-serif text-xl mb-3 text-brand-black">Curated Luxury</h4>
-                    <p class="text-sm text-gray-600 leading-relaxed">Designed for the global traveler who seeks wellness without compromising on comfort.</p>
-                </div>
-                <div class="p-8 bg-brand-light rounded-sm hover:shadow-lg transition-shadow duration-300">
-                    <i data-lucide="microscope" class="w-8 h-8 text-brand-terra mb-4"></i>
-                    <h4 class="font-serif text-xl mb-3 text-brand-black">Clinical Integrity</h4>
-                    <p class="text-sm text-gray-600 leading-relaxed">Supervised by senior Vaidyas, ensuring every treatment is medically sound.</p>
-                </div>
-                <div class="p-8 bg-brand-light rounded-sm hover:shadow-lg transition-shadow duration-300">
-                    <i data-lucide="leaf" class="w-8 h-8 text-brand-terra mb-4"></i>
-                    <h4 class="font-serif text-xl mb-3 text-brand-black">Sustainable Living</h4>
-                    <p class="text-sm text-gray-600 leading-relaxed">Farm-to-table nutrition and eco-conscious architecture integrated with nature.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 5. Clinical Edge: Facilities Grid -->
-    <section id="clinical" class="py-24 bg-brand-cream px-6 md:px-12">
-        <div class="max-w-7xl mx-auto">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-16">
-                <div class="max-w-2xl">
-                    <span class="text-brand-terra uppercase tracking-widest text-xs font-semibold mb-2 block">Clinical Excellence</span>
-                    <h2 class="font-serif text-4xl md:text-5xl text-brand-green">Tailored Protocols</h2>
-                </div>
-                <p class="text-brand-sage mt-4 md:mt-0 max-w-sm text-sm">Hover over a specialized treatment to understand the transformative journey.</p>
-            </div>
-
-            <!-- Interactive Grid -->
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-1">
-                
-                <!-- Item 1 -->
-                <div class="group relative h-80 bg-white overflow-hidden treatment-card cursor-crosshair">
-                    <div class="absolute top-6 left-6 z-10">
-                        <span class="text-xs font-bold text-brand-green border border-brand-green px-2 py-1 rounded-full">01</span>
-                    </div>
-                    <div class="h-full flex flex-col justify-center items-center p-8 text-center transition-opacity duration-300 group-hover:opacity-10">
-                        <h3 class="font-serif text-3xl text-brand-black mb-2">Panchakarma</h3>
-                        <p class="text-sm text-gray-500">The ultimate detoxification.</p>
-                    </div>
-                    
-                    <!-- Overlay -->
-                    <div class="absolute inset-0 bg-brand-green p-8 flex flex-col justify-center text-brand-cream opacity-0 transition-opacity duration-500 treatment-overlay">
-                        <h4 class="font-serif text-2xl mb-4 text-brand-terra">Cellular Renewal</h4>
-                        <ul class="space-y-2 text-sm font-light mb-6">
-                            <li class="flex items-start gap-2"><span class="text-brand-terra">•</span> 21-Day Intensive Protocol</li>
-                            <li class="flex items-start gap-2"><span class="text-brand-terra">•</span> Bio-purification</li>
-                            <li class="flex items-start gap-2"><span class="text-brand-terra">•</span> Metabolic Reset</li>
-                        </ul>
-                        <span class="text-xs uppercase tracking-widest border-b border-white/20 pb-1 self-start">View Protocol</span>
-                    </div>
-                </div>
-
-                <!-- Item 2 -->
-                <div class="group relative h-80 bg-white overflow-hidden treatment-card cursor-crosshair">
-                    <div class="absolute top-6 left-6 z-10">
-                        <span class="text-xs font-bold text-brand-green border border-brand-green px-2 py-1 rounded-full">02</span>
-                    </div>
-                    <div class="h-full flex flex-col justify-center items-center p-8 text-center transition-opacity duration-300 group-hover:opacity-10">
-                        <h3 class="font-serif text-3xl text-brand-black mb-2">Rasayana</h3>
-                        <p class="text-sm text-gray-500">Rejuvenation & Anti-Aging.</p>
-                    </div>
-                    
-                    <div class="absolute inset-0 bg-brand-terra p-8 flex flex-col justify-center text-white opacity-0 transition-opacity duration-500 treatment-overlay">
-                        <h4 class="font-serif text-2xl mb-4 text-brand-green mix-blend-multiply">Vitality Restoration</h4>
-                        <ul class="space-y-2 text-sm font-light mb-6">
-                            <li class="flex items-start gap-2"><span>•</span> Immune System Boost</li>
-                            <li class="flex items-start gap-2"><span>•</span> Tissue Nourishment</li>
-                            <li class="flex items-start gap-2"><span>•</span> Cognitive Clarity</li>
-                        </ul>
-                        <span class="text-xs uppercase tracking-widest border-b border-white/20 pb-1 self-start">View Protocol</span>
-                    </div>
-                </div>
-
-                <!-- Item 3 -->
-                <div class="group relative h-80 bg-white overflow-hidden treatment-card cursor-crosshair">
-                    <div class="absolute top-6 left-6 z-10">
-                        <span class="text-xs font-bold text-brand-green border border-brand-green px-2 py-1 rounded-full">03</span>
-                    </div>
-                    <div class="h-full flex flex-col justify-center items-center p-8 text-center transition-opacity duration-300 group-hover:opacity-10">
-                        <h3 class="font-serif text-3xl text-brand-black mb-2">Manashanthi</h3>
-                        <p class="text-sm text-gray-500">Mental Stress Management.</p>
-                    </div>
-                    
-                    <div class="absolute inset-0 bg-brand-sage p-8 flex flex-col justify-center text-brand-black opacity-0 transition-opacity duration-500 treatment-overlay">
-                        <h4 class="font-serif text-2xl mb-4 text-white">Mind-Body Balance</h4>
-                        <ul class="space-y-2 text-sm font-medium mb-6">
-                            <li class="flex items-start gap-2"><span>•</span> Shirodhara Therapy</li>
-                            <li class="flex items-start gap-2"><span>•</span> Meditation & Yoga</li>
-                            <li class="flex items-start gap-2"><span>•</span> Sleep Regulation</li>
-                        </ul>
-                        <span class="text-xs uppercase tracking-widest border-b border-black/20 pb-1 self-start">View Protocol</span>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- 6. Social Proof: The Voices -->
-    <section class="py-32 bg-brand-black relative overflow-hidden">
-        <div class="absolute top-0 right-0 w-1/3 h-full bg-brand-green/10 rounded-l-full blur-3xl"></div>
-        
-        <div class="max-w-4xl mx-auto px-6 text-center relative z-10">
-            <i data-lucide="quote" class="w-12 h-12 text-brand-terra mx-auto mb-8 opacity-50"></i>
-            
-            <blockquote class="font-serif text-2xl md:text-4xl text-brand-cream leading-normal mb-12">
-                "It wasn't just a retreat; it was a recalibration of my entire system. The medical precision at AyurSanctuary rivals the best clinics in Europe, but with a soul that is distinctly Indian."
-            </blockquote>
-            
-            <div class="flex items-center justify-center gap-4">
-                <div class="text-right">
-                    <p class="text-white font-medium text-lg">Elena R.</p>
-                    <p class="text-brand-sage text-sm uppercase tracking-wider">Zurich, Switzerland</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 7. CTA & Footer -->
-    <footer id="contact" class="bg-brand-cream pt-24 pb-12 px-6 border-t border-brand-green/10">
-        <div class="max-w-7xl mx-auto">
-            <div class="grid md:grid-cols-2 gap-16 mb-24">
+        <!-- Footer -->
+        <footer id="booking" class="bg-brand-black text-white pt-32 pb-12 px-6 md:px-12">
+            <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12">
                 <div>
-                    <h2 class="font-serif text-5xl md:text-6xl text-brand-green mb-6">Begin Your Journey.</h2>
-                    <p class="text-brand-black/70 max-w-md text-lg font-light mb-8">
-                        We invite you to discuss a bespoke wellness itinerary or explore partnership opportunities.
-                    </p>
-                    <a href="#" class="inline-block bg-brand-green text-brand-cream px-10 py-4 rounded-sm hover:bg-brand-terra transition-colors duration-300 uppercase tracking-widest text-sm font-medium">
-                        Request Consultation
-                    </a>
+                    <h2 class="font-serif text-5xl mb-8">Start Your Journey</h2>
+                    <p class="text-white/60 max-w-sm mb-10 text-lg font-light">For partnerships or bookings, contact us directly.</p>
+                    <button class="btn-action px-12 py-5 text-sm uppercase tracking-widest font-bold hover-trigger">Book Now</button>
                 </div>
-                
-                <div class="grid grid-cols-2 gap-8 font-light text-sm text-brand-black/80">
+                <div class="grid grid-cols-2 gap-12 text-sm text-white/70">
                     <div>
-                        <h4 class="font-bold text-brand-black mb-4 uppercase tracking-widest text-xs">Contact</h4>
-                        <p class="mb-2">concierge@devivilasam.com</p>
-                        <p>+91 481 234 5678</p>
+                        <h4 class="text-brand-sage uppercase tracking-widest text-xs font-bold mb-6">Locations</h4>
+                        <p class="mb-2">Kottayam (Heritage)</p>
+                        <p>Munnar (Resort)</p>
                     </div>
                     <div>
-                        <h4 class="font-bold text-brand-black mb-4 uppercase tracking-widest text-xs">Headquarters</h4>
-                        <p>Champakara House,</p>
-                        <p>Kottayam, Kerala 686560</p>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-brand-black mb-4 uppercase tracking-widest text-xs">Social</h4>
-                        <p class="mb-2 hover:text-brand-terra cursor-pointer">Instagram</p>
-                        <p class="hover:text-brand-terra cursor-pointer">LinkedIn</p>
-                    </div>
-                    <div>
-                         <h4 class="font-bold text-brand-black mb-4 uppercase tracking-widest text-xs">Legal</h4>
-                         <p class="mb-2 hover:text-brand-terra cursor-pointer">Privacy Policy</p>
-                         <p class="hover:text-brand-terra cursor-pointer">Terms of Service</p>
+                        <h4 class="text-brand-sage uppercase tracking-widest text-xs font-bold mb-6">Email</h4>
+                        <p>concierge@devivilasam.com</p>
                     </div>
                 </div>
             </div>
+            <div class="border-t border-white/10 mt-24 pt-8 text-center text-xs text-white/30 uppercase tracking-widest">
+                &copy; 2026 Devivilasam Champakara Ayurveda.
+            </div>
+        </footer>
+    </main>
 
-            <div class="border-t border-brand-black/10 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-brand-black/40 uppercase tracking-wider">
-                <p>&copy; 2026 Devivilasam Champakara. All rights reserved.</p>
-                <div class="mt-4 md:mt-0">
-                    <span class="mx-2">AyurSanctuary</span> • <span class="mx-2">Wellness</span>
+    <!-- ============================================== -->
+    <!-- SUBPAGE 1: HEALING -->
+    <!-- ============================================== -->
+    <main id="healing" class="page-section">
+        <header class="h-[70vh] relative bg-brand-dark flex items-center justify-center">
+            <img src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?q=80&w=1932&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover opacity-50" alt="Kottayam">
+            <div class="relative z-10 text-center text-white">
+                <span class="bg-brand-orange px-3 py-1 text-[10px] uppercase tracking-widest font-bold mb-6 inline-block">The Roots</span>
+                <h1 class="font-serif text-6xl md:text-8xl">Devivilasam Kottayam</h1>
+            </div>
+        </header>
+        <section class="py-32 px-6 md:px-12 bg-brand-cream text-center">
+            <div class="max-w-3xl mx-auto">
+                <h2 class="font-serif text-4xl text-brand-dark mb-8">Authentic Heritage Healing</h2>
+                <p class="text-xl text-brand-black/70 leading-relaxed font-light">Located in the heart of the backwaters, this is where our lineage began.</p>
+                <div class="mt-12"><button onclick="transitionToPage('home')" class="text-xs uppercase tracking-widest border-b border-brand-dark pb-1 hover-trigger">Back to Home</button></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ============================================== -->
+    <!-- SUBPAGE 2: WELLNESS -->
+    <!-- ============================================== -->
+    <main id="wellness" class="page-section">
+        <header class="h-[90vh] relative bg-brand-black flex items-center justify-center">
+            <img src="https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?q=80&w=1935&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover opacity-70" alt="Munnar Resort">
+            <div class="relative z-10 text-center text-white p-6">
+                <h1 class="font-serif text-7xl md:text-9xl mb-4">AyurSanctuary</h1>
+                <p class="text-xl font-light tracking-wide text-brand-sage">Munnar Wellness Resort</p>
+            </div>
+        </header>
+        <section class="py-32 px-6 md:px-12 bg-white text-center">
+            <div class="max-w-3xl mx-auto">
+                <span class="text-brand-orange text-xs uppercase tracking-widest font-bold block mb-4">The Elevation</span>
+                <p class="text-2xl md:text-3xl font-serif text-brand-dark leading-relaxed">"Where misty mountains meet modern luxury."</p>
+            </div>
+        </section>
+
+        <!-- Packages (with images + 1-2 sentence) -->
+        <section class="py-24 bg-brand-cream px-6 md:px-12">
+            <div class="max-w-7xl mx-auto">
+                <h3 class="font-serif text-4xl text-brand-dark mb-16">Wellness Packages</h3>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Pkg 1 -->
+                    <div class="bg-white p-8 shadow-sm hover:shadow-xl transition-shadow duration-500 hover-trigger">
+                        <img src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=2070&auto=format&fit=crop" class="w-full h-56 object-cover mb-8" alt="Detox">
+                        <h4 class="font-serif text-2xl mb-3">The Detox Week</h4>
+                        <p class="text-sm text-gray-600 leading-relaxed">A comprehensive 7-day program focused on deep cleansing and metabolic reset through authentic Panchakarma protocols and yoga.</p>
+                    </div>
+                    <!-- Pkg 2 -->
+                    <div class="bg-white p-8 shadow-sm hover:shadow-xl transition-shadow duration-500 hover-trigger">
+                        <img src="https://images.unsplash.com/photo-1579126038374-6064e9370f0f?q=80&w=2031&auto=format&fit=crop" class="w-full h-56 object-cover mb-8" alt="Stress">
+                        <h4 class="font-serif text-2xl mb-3">Digital Detox</h4>
+                        <p class="text-sm text-gray-600 leading-relaxed">Disconnect to reconnect in our tech-free zones. Experience mental clarity through Shirodhara and guided meditation sessions.</p>
+                    </div>
+                    <!-- Pkg 3 -->
+                    <div class="bg-white p-8 shadow-sm hover:shadow-xl transition-shadow duration-500 hover-trigger">
+                        <img src="https://images.unsplash.com/photo-1515377905703-c4788e51af15?q=80&w=2073&auto=format&fit=crop" class="w-full h-56 object-cover mb-8" alt="Beauty">
+                        <h4 class="font-serif text-2xl mb-3">Radiance</h4>
+                        <p class="text-sm text-gray-600 leading-relaxed">Rejuvenate your skin and vitality with our anti-aging therapies using rare herbal formulations and specialized massages.</p>
+                    </div>
                 </div>
             </div>
-        </div>
-    </footer>
+        </section>
 
-    <!-- Initialize Lucide Icons & GSAP -->
+        <!-- Rooms -->
+        <section class="py-32 px-6 md:px-12 bg-white">
+            <div class="max-w-7xl mx-auto">
+                <div class="grid md:grid-cols-2 gap-16 items-center">
+                    <div class="overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?q=80&w=2070&auto=format&fit=crop" 
+                             class="w-full h-[500px] object-cover hover:scale-105 transition-transform duration-1000" alt="Room">
+                    </div>
+                    <div>
+                        <h3 class="font-serif text-4xl text-brand-dark mb-6">Valley View Suite</h3>
+                        <p class="text-gray-600 mb-8 text-lg font-light">Panoramic views of the tea plantations. Includes private balcony and jacuzzi for post-treatment relaxation.</p>
+                        <ul class="text-sm text-brand-sage space-y-4 mb-10 font-medium uppercase tracking-wider">
+                            <li>• King Size Bed</li>
+                            <li>• Private Butler</li>
+                            <li>• In-room Herbal Bath</li>
+                            <li>• Daily Yoga Session</li>
+                        </ul>
+                        <button class="btn-action px-10 py-4 text-xs uppercase font-bold hover-trigger">Check Availability</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials (Added per request) -->
+        <section class="py-32 bg-brand-stone text-center px-6">
+            <div class="max-w-3xl mx-auto">
+                <i data-lucide="star" class="w-6 h-6 text-brand-orange mx-auto mb-6 fill-current"></i>
+                <p class="font-serif text-3xl text-brand-dark mb-8 leading-relaxed">"The most peaceful week of my life. The service is impeccable, and the treatments are deeply transformative."</p>
+                <div class="flex flex-col items-center">
+                    <p class="text-sm font-bold uppercase tracking-widest text-brand-black">James T.</p>
+                    <p class="text-xs text-brand-sage">New York</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Info (Added per request) -->
+        <section class="py-32 bg-brand-dark text-white text-center px-6">
+            <h3 class="font-serif text-4xl mb-8">Plan Your Retreat</h3>
+            <p class="mb-2 font-serif text-3xl">+91 984 700 9999</p>
+            <p class="text-sm opacity-70 uppercase tracking-widest mb-12">munnar@devivilasam.com</p>
+            <div>
+                 <button onclick="transitionToPage('home')" class="text-xs uppercase tracking-widest border-b border-white pb-1 hover:text-brand-orange hover:border-brand-orange transition-colors hover-trigger">Back to Home</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- ============================================== -->
+    <!-- SUBPAGE 3: POST NATAL -->
+    <!-- ============================================== -->
+    <main id="postnatal" class="page-section">
+        <header class="h-[80vh] relative bg-brand-cream flex items-center justify-center">
+            <img src="https://images.unsplash.com/photo-1555252333-9f8e92e65df9?q=80&w=2070&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover opacity-80 grayscale" alt="Post Natal">
+            <div class="relative z-10 text-center text-white bg-brand-dark/90 p-20 backdrop-blur-sm shadow-2xl">
+                <h1 class="font-serif text-6xl md:text-8xl mb-6">Post-Natal Care</h1>
+                <p class="text-sm uppercase tracking-widest font-medium">Mother & Child Wellness</p>
+            </div>
+        </header>
+        <section class="py-32 px-6 md:px-12 bg-white text-center">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="font-serif text-4xl text-brand-dark mb-8">Restoring Balance After Birth</h2>
+                <div class="mt-12"><button onclick="transitionToPage('home')" class="text-xs uppercase tracking-widest border-b border-brand-dark pb-1 hover-trigger">Back to Home</button></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Logic -->
     <script>
         lucide.createIcons();
-
-        // Loading Screen Animation
-        window.addEventListener('load', () => {
-            const tl = gsap.timeline();
-            
-            tl.to("#loader-text", {
-                opacity: 1,
-                duration: 1,
-                y: 0,
-                ease: "power2.out"
-            })
-            .to("#loader-text", {
-                opacity: 0,
-                duration: 0.5,
-                delay: 0.5
-            })
-            .to("#loader", {
-                y: "-100%",
-                duration: 1.2,
-                ease: "power4.inOut"
-            })
-            .from(".hero-anim", {
-                y: 50,
-                opacity: 0,
-                stagger: 0.2,
-                duration: 1.2,
-                ease: "power3.out"
-            }, "-=0.5");
-        });
-
-        // Scroll Animations using GSAP ScrollTrigger
         gsap.registerPlugin(ScrollTrigger);
 
-        // Navbar Change on Scroll
-        const navbar = document.getElementById('navbar');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                navbar.classList.add('bg-brand-green/95', 'backdrop-blur-md', 'shadow-md');
-                navbar.classList.remove('py-6');
-                navbar.classList.add('py-4');
+        // 1. Loading Screen Animation (The Curtain)
+        const loader = document.getElementById('global-loader');
+        
+        function transitionToPage(pageId) {
+            // Check if already on page
+            if(document.getElementById(pageId).classList.contains('active')) return;
+
+            // Slide Curtain Down
+            gsap.to(loader, { 
+                y: 0, 
+                duration: 0.8, 
+                ease: "power4.inOut",
+                onStart: () => {
+                    // Reset Loader Text
+                    gsap.set(".loader-text", { opacity: 0, y: 20 });
+                    gsap.set(".loader-sub", { opacity: 0, y: 10 });
+                    gsap.set(".loader-line", { width: 0 });
+                },
+                onComplete: () => {
+                    // 1. Animate Loader Content (Simulate Load)
+                    const tl = gsap.timeline();
+                    tl.to(".loader-text", { opacity: 1, y: 0, duration: 0.5 })
+                      .to(".loader-sub", { opacity: 1, y: 0, duration: 0.5 }, "-=0.3")
+                      .to(".loader-line", { width: "100px", duration: 0.6, ease: "power2.inOut" }, "-=0.3")
+                      .to(".loader-content", { opacity: 0, y: -20, duration: 0.4, delay: 0.4 }); // Fade out text
+
+                    // 2. Switch Pages Logic (Hidden behind curtain)
+                    setTimeout(() => {
+                        document.querySelectorAll('.page-section').forEach(el => {
+                            el.classList.remove('active');
+                            el.style.display = 'none';
+                        });
+                        const next = document.getElementById(pageId);
+                        next.style.display = 'block';
+                        next.classList.add('active');
+                        window.scrollTo(0,0);
+                        
+                        // 3. Slide Curtain Up (Reveal)
+                        gsap.to(loader, { 
+                            y: "-100%", 
+                            duration: 1, 
+                            ease: "power4.inOut",
+                            delay: 0.2, // Small pause for drama
+                            onComplete: () => {
+                                gsap.set(loader, { y: "100%" }); // Reset to bottom for next slide up
+                                ScrollTrigger.refresh();
+                            }
+                        });
+                    }, 2000); // Wait for loader animation text
+                }
+            });
+        }
+
+        // Initial Load
+        window.addEventListener('load', () => {
+            // Initial transition logic manually
+            gsap.fromTo(loader, { y: 0 }, {
+                y: "-100%", duration: 1.2, delay: 1.5, ease: "power4.inOut"
+            });
+            gsap.to(".loader-text", { opacity: 1, y: 0, duration: 0.8 });
+            gsap.to(".loader-sub", { opacity: 1, y: 0, duration: 0.8, delay: 0.2 });
+            gsap.to(".loader-line", { width: "100px", duration: 1, delay: 0.4 });
+            
+            // Hero Text Reveal (After Loader)
+            setTimeout(() => {
+                gsap.to(".line-reveal span", { y: 0, opacity: 1, duration: 1.2, stagger: 0.2, ease: "power3.out" });
+                gsap.to(".reveal-text", { opacity: 1, y: 0, duration: 1, delay: 0.5 });
+            }, 2200);
+        });
+
+        // 2. Audio Logic
+        const audioBtn = document.getElementById('audio-btn');
+        const bgMusic = document.getElementById('bg-music');
+        bgMusic.volume = 0; // Start silent
+
+        audioBtn.addEventListener('click', () => {
+            if (bgMusic.paused) {
+                const playPromise = bgMusic.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        gsap.to(bgMusic, { volume: 0.15, duration: 3 }); // Fade In
+                        audioBtn.classList.remove('paused');
+                    }).catch(error => console.log("Audio Error:", error));
+                }
             } else {
-                navbar.classList.remove('bg-brand-green/95', 'backdrop-blur-md', 'shadow-md');
-                navbar.classList.remove('py-4');
-                navbar.classList.add('py-6');
+                gsap.to(bgMusic, { 
+                    volume: 0, 
+                    duration: 1, 
+                    onComplete: () => { bgMusic.pause(); audioBtn.classList.add('paused'); } 
+                });
             }
         });
 
-        // Legacy Section Reveal
-        gsap.from(".reveal-text", {
-            scrollTrigger: {
-                trigger: "#legacy",
-                start: "top 70%"
-            },
-            y: 50,
-            opacity: 0,
-            duration: 1,
-            ease: "power3.out"
-        });
+        // 3. Smooth Booking Scroll
+        const lenis = new Lenis({ duration: 1.2, smooth: true });
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
 
-        gsap.from(".reveal-image", {
-            scrollTrigger: {
-                trigger: "#legacy",
-                start: "top 70%"
-            },
-            x: 50,
-            opacity: 0,
-            duration: 1,
-            delay: 0.2,
-            ease: "power3.out"
-        });
+        function smoothScrollToBooking() {
+            const home = document.getElementById('home');
+            if (!home.classList.contains('active')) {
+                transitionToPage('home');
+                // Wait for curtain to lift (approx 3.2s total based on delays)
+                setTimeout(() => {
+                    lenis.scrollTo('#booking', { duration: 2.5 });
+                }, 3500);
+            } else {
+                lenis.scrollTo('#booking', { duration: 2.5 });
+            }
+        }
 
-        // Parallax Effect for Destinations
-        gsap.utils.toArray('.group').forEach((section, i) => {
-            gsap.to(section.querySelector('.bg-cover'), {
-                scrollTrigger: {
-                    trigger: section,
-                    scrub: true
-                },
-                y: 30,
-                ease: "none"
-            });
+        // 4. Custom Cursor
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorCircle = document.querySelector('.cursor-circle');
+        document.addEventListener('mousemove', (e) => {
+            gsap.to(cursorDot, { x: e.clientX, y: e.clientY, duration: 0.1 });
+            gsap.to(cursorCircle, { x: e.clientX, y: e.clientY, duration: 0.3 });
+        });
+        document.querySelectorAll('a, button, .hover-trigger').forEach(el => {
+            el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+            el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
         });
 
     </script>
