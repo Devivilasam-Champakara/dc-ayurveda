@@ -239,8 +239,10 @@ function openBookingModal() {
     // show container
     bookingModal.classList.remove('hidden');
     bookingModal.classList.add('flex');
-    // prevent background scroll
-    document.body.style.overflow = 'hidden';
+    
+    // Lock background scroll: stop Lenis and toggle modal-open class
+    // lenis.stop();
+    document.documentElement.classList.add('modal-open');
 
     // initial states
     gsap.set(modalOverlay, { opacity: 0 });
@@ -257,7 +259,8 @@ function closeBookingModal() {
     const tl = gsap.timeline({ onComplete: () => {
         bookingModal.classList.remove('flex');
         bookingModal.classList.add('hidden');
-        document.body.style.overflow = '';
+        document.documentElement.classList.remove('modal-open');
+        // lenis.start();
         gsap.set(modalOverlay, { opacity: 0 });
         gsap.set(bookingPanel, { opacity: 0 });
     }});

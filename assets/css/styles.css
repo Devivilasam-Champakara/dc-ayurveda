@@ -180,12 +180,21 @@ html.lenis { height: auto; }
         width: 100%;
         box-sizing: border-box;
     }
+}
 
-/* Booking Modal: ensure full visibility on short/phone screens
-   - Limit panel height relative to viewport minus navigation/safe-area
-   - Allow panel to scroll internally and prefer top-aligned on very short screens
-*/
+/* Booking Modal: ensure full visibility on short/phone screens */
+#bookingModal {
+    z-index: 99990 !important;
+}
+
+#modalOverlay {
+    z-index: 99991 !important;
+    position: absolute;
+    inset: 0;
+}
+
 #bookingPanel {
+    z-index: 99992 !important;
     max-height: calc(100vh - 120px);
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
@@ -198,7 +207,6 @@ html.lenis { height: auto; }
         padding-bottom: calc(env(safe-area-inset-bottom) + 2rem);
     }
     #bookingPanel {
-        /* make the panel fit between top inset + extra space */
         max-height: calc(100vh - (env(safe-area-inset-top) + 4rem));
         margin-top: 0.5rem;
         width: min(95%, 720px);
@@ -211,4 +219,21 @@ html.lenis { height: auto; }
         max-width: none;
     }
 }
+
+/* When modal is open: lock background scroll and keep cursor visible */
+html.modal-open {
+    overflow: hidden !important;
+}
+html.modal-open body {
+    overflow: hidden !important;
+}
+html.modal-open .page-section {
+    pointer-events: none;
+}
+
+/* Ensure cursor remains visible in modal */
+html.modal-open .cursor-dot,
+html.modal-open .cursor-circle {
+    opacity: 1 !important;
+    z-index: 99999999 !important;
 }
