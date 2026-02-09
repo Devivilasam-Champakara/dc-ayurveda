@@ -2,6 +2,19 @@
 lucide.createIcons();
 gsap.registerPlugin(ScrollTrigger);
 
+// 0. Video Playlist Logic
+const heroVideo = document.getElementById('hero-video');
+const videoPlaylist = ['assets/videos/background.mp4', 'assets/videos/background2.mp4'];
+let currentVideoIndex = 0;
+
+if (heroVideo) {
+    heroVideo.addEventListener('ended', () => {
+        currentVideoIndex = (currentVideoIndex + 1) % videoPlaylist.length;
+        heroVideo.src = videoPlaylist[currentVideoIndex];
+        heroVideo.play();
+    });
+}
+
 // 1. Loading Screen Animation (The Curtain)
 const loader = document.getElementById('global-loader');
 

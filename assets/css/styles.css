@@ -180,4 +180,35 @@ html.lenis { height: auto; }
         width: 100%;
         box-sizing: border-box;
     }
+
+/* Booking Modal: ensure full visibility on short/phone screens
+   - Limit panel height relative to viewport minus navigation/safe-area
+   - Allow panel to scroll internally and prefer top-aligned on very short screens
+*/
+#bookingPanel {
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+@media (max-height: 700px) {
+    #bookingModal {
+        align-items: flex-start;
+        padding-top: calc(env(safe-area-inset-top) + 4rem);
+        padding-bottom: calc(env(safe-area-inset-bottom) + 2rem);
+    }
+    #bookingPanel {
+        /* make the panel fit between top inset + extra space */
+        max-height: calc(100vh - (env(safe-area-inset-top) + 4rem));
+        margin-top: 0.5rem;
+        width: min(95%, 720px);
+    }
+}
+
+@media (max-width: 480px) {
+    #bookingPanel {
+        width: calc(100% - 32px);
+        max-width: none;
+    }
+}
 }
