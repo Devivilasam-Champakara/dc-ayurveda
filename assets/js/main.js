@@ -80,8 +80,23 @@ window.addEventListener('load', () => {
     
     // Hero Text Reveal (After Loader)
     setTimeout(() => {
-        gsap.to(".line-reveal span", { y: 0, opacity: 1, duration: 1.2, stagger: 0.2, ease: "power3.out" });
-        gsap.to(".reveal-text", { opacity: 1, y: 0, duration: 1, delay: 0.5 });
+        gsap.to(".line-reveal span", {
+            y: 0,
+            opacity: 1,
+            duration: 1.2,
+            stagger: 0.2,
+            ease: "power3.out",
+            onComplete: () => {
+                gsap.set(".line-reveal", { overflow: "visible" });
+            }
+        });
+
+        gsap.to(".reveal-text", {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            delay: 0.5,
+        });
     }, 2200);
 });
 

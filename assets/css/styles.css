@@ -98,7 +98,7 @@ html.lenis { height: auto; }
 .hero-video { width: 100%; height: 100%; object-fit: cover; }
 .img-hover { transition: transform 0.7s ease; }
 .group:hover .img-hover { transform: scale(1.05); }
-.line-reveal { overflow: visible; }
+.line-reveal { overflow: hidden; }
 .line-reveal span { display: block; transform: translateY(100%); opacity: 0; transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1), opacity 1s ease; }
 .line-reveal.visible span { transform: translateY(0); opacity: 1; }
 
