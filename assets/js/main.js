@@ -22,13 +22,19 @@ function transitionToPage(pageId) {
     // Check if already on page
     if(document.getElementById(pageId).classList.contains('active')) return;
 
+    // Kill any existing animations on loader to prevent conflicts
+    gsap.killTweensOf(loader);
+    gsap.killTweensOf(".loader-text, .loader-sub, .loader-line, .loader-content");
+
     // Slide Curtain Down
     gsap.to(loader, { 
         y: 0, 
         duration: 0.8, 
         ease: "power4.inOut",
+        overwrite: 'auto',
         onStart: () => {
-            // Reset Loader Text
+            // Reset Loader Content Container and Text
+            gsap.set(".loader-content", { opacity: 1, y: 0 });
             gsap.set(".loader-text", { opacity: 0, y: 20 });
             gsap.set(".loader-sub", { opacity: 0, y: 10 });
             gsap.set(".loader-line", { width: 0 });
@@ -58,8 +64,10 @@ function transitionToPage(pageId) {
                     duration: 1, 
                     ease: "power4.inOut",
                     delay: 0.2, // Small pause for drama
+                    overwrite: 'auto',
                     onComplete: () => {
-                        gsap.set(loader, { y: "100%" }); // Reset to bottom for next slide up
+                        // Reset to top for next page transition (curtain slides down from top)
+                        gsap.set(loader, { y: "-100%" });
                         ScrollTrigger.refresh();
                     }
                 });
@@ -169,6 +177,33 @@ function smoothScrollToBooking() {
         }, 3500);
     } else {
         lenis.scrollTo('#booking', { duration: 2.5 });
+    }
+}
+// Smooth scroll helper for "Our Destinations" from hero CTA
+function smoothScrollToDestinations() {
+    const home = document.getElementById('home');
+    if (!home.classList.contains('active')) {
+        transitionToPage('home');
+        // Wait for curtain to lift before scrolling
+        setTimeout(() => {
+            lenis.scrollTo('#destinations', { duration: 2.0 });
+        }, 3500);
+    } else {
+        lenis.scrollTo('#destinations', { duration: 1.6 });
+    }
+}
+
+// Smooth scroll helper for "Our Legacy" from hero CTA
+function smoothScrollToLegacy() {
+    const home = document.getElementById('home');
+    if (!home.classList.contains('active')) {
+        transitionToPage('home');
+        // Wait for curtain to lift before scrolling
+        setTimeout(() => {
+            lenis.scrollTo('#legacy', { duration: 2.0 });
+        }, 3500);
+    } else {
+        lenis.scrollTo('#legacy', { duration: 1.6 });
     }
 }
 
@@ -308,3 +343,5 @@ window.transitionToPage = transitionToPage;
 window.toggleMobileMenu = toggleMobileMenu;
 window.closeMobileMenu = closeMobileMenu;
 window.smoothScrollToBooking = smoothScrollToBooking;
+window.smoothScrollToDestinations = smoothScrollToDestinations;
+window.smoothScrollToLegacy = smoothScrollToLegacy;

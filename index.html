@@ -135,8 +135,12 @@
                     <div class="line-reveal"><span>by <i class="text-brand-sage">Time.</i></span></div>
                 </h1>
                 <p class="text-white/80 max-w-xl text-lg font-light reveal-text delay-200">
-                    Seven Generations of Ayurvedic Practice in Kerala
+                            Seven Generations of Ayurvedic Practice in Kerala
                 </p>
+                <div class="mt-8 flex gap-4 items-center">
+                    <button onclick="smoothScrollToDestinations()" class="btn-action px-6 py-3 text-sm font-medium">Explore Our Centres</button>
+                    <button onclick="smoothScrollToLegacy()" class="border border-white/20 px-6 py-3 text-sm text-white">Discover The Legacy</button>
+                </div>
             </div>
         </header>
 
@@ -156,7 +160,7 @@
         </section>
 
         <!-- Legacy -->
-        <section class="py-24 px-6 md:px-12 relative bg-brand-cream">
+        <section id="legacy" class="py-24 px-6 md:px-12 relative bg-brand-cream">
             <div class="max-w-4xl mx-auto text-center" data-speed="0.9">
                 <span class="text-brand-orange text-xs uppercase tracking-widest font-bold mb-6 block reveal-on-scroll">Our Legacy</span>
                 <h2 class="font-serif text-4xl md:text-5xl text-brand-dark mb-8 leading-tight reveal-on-scroll">
@@ -166,11 +170,14 @@
                 <p class="text-brand-black/70 text-lg font-light leading-relaxed reveal-on-scroll">
                     For centuries, our family has practiced Kerala Ayurveda — specializing in bala chikitsa, prasava raksha chikitsa, manasika roga chikitsa, and interactive care. Today, Devivilasam continues this lineage through responsible clinical Ayurvedic practice in Kerala.
                 </p>
+                <div class="mt-12">
+                    <button onclick="transitionToPage('legacy')" class="text-xs uppercase tracking-widest border-b border-brand-dark pb-1 hover-trigger">Explore the Full Legacy</button>
+                </div>
             </div>
         </section>
 
         <!-- Destinations -->
-        <section class="py-24 bg-brand-stone border-y border-brand-dark/10">
+        <section id="destinations" class="py-24 bg-brand-stone border-y border-brand-dark/10">
             <div class="max-w-7xl mx-auto px-6 md:px-12">
                 <div class="text-center mb-16">
                     <span class="text-brand-dark text-xs uppercase tracking-widest font-bold">Our Destinations</span>
