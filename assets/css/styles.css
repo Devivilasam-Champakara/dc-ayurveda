@@ -102,6 +102,15 @@ html.lenis { height: auto; }
 .line-reveal span { display: block; transform: translateY(100%); opacity: 0; transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1), opacity 1s ease; }
 .line-reveal.visible span { transform: translateY(0); opacity: 1; }
 
+.package-card { position: relative; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.package-card:hover { transform: translateY(-4px); box-shadow: 0 20px 35px rgba(0, 0, 0, 0.12); }
+.package-card h3 { margin-bottom: 0.75rem; }
+.package-desc { max-height: 0; opacity: 0; overflow: hidden; transition: max-height 0.35s ease, opacity 0.35s ease; }
+.package-card:hover .package-desc, .package-card:focus-within .package-desc { max-height: 180px; opacity: 1; }
+.package-card p.package-desc { margin-top: 0.5rem; }
+.package-card .package-title::after { content: ' (swipe / tap)'; font-size: 0.7rem; color: #6b7280; }
+
+
 /* Mobile Menu */
 .mobile-menu {
     position: fixed;

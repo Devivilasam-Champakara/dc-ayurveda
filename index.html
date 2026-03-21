@@ -80,9 +80,9 @@
     <!-- Mobile Menu -->
     <div id="mobileMenu" class="mobile-menu">
         <button onclick="closeMobileMenu(); transitionToPage('home');" class="mobile-link">Home</button>
+        <button onclick="closeMobileMenu(); transitionToPage('legacy');" class="mobile-link">Legacy</button>
         <button onclick="closeMobileMenu(); transitionToPage('healing');" class="mobile-link">Healing</button>
         <button onclick="closeMobileMenu(); transitionToPage('wellness');" class="mobile-link">Wellness</button>
-        <button onclick="closeMobileMenu(); transitionToPage('postnatal');" class="mobile-link">Post-Natal</button>
         <button onclick="closeMobileMenu(); smoothScrollToBooking();" class="bg-brand-orange px-8 py-3 rounded-sm mobile-link">Book Now</button>
     </div>
 
@@ -105,9 +105,9 @@
         
         <div class="hidden md:flex gap-8 text-[11px] uppercase tracking-widest font-medium items-center">
             <button onclick="transitionToPage('home')" class="hover:text-brand-orange transition-colors hover-trigger">Home</button>
+            <button onclick="transitionToPage('legacy')" class="hover:text-brand-orange transition-colors hover-trigger">Legacy</button>
             <button onclick="transitionToPage('healing')" class="hover:text-brand-orange transition-colors hover-trigger">Healing</button>
             <button onclick="transitionToPage('wellness')" class="hover:text-brand-orange transition-colors hover-trigger">Wellness</button>
-            <button onclick="transitionToPage('postnatal')" class="hover:text-brand-orange transition-colors hover-trigger">Post-Natal</button>
             <button onclick="smoothScrollToBooking()" class="bg-brand-orange px-6 py-2 rounded-sm hover:bg-white hover:text-brand-orange transition-all hover-trigger">Book Now</button>
         </div>
         
@@ -160,7 +160,7 @@
         </section>
 
         <!-- Legacy -->
-        <section id="legacy" class="pb-24 px-6 md:px-12 relative bg-brand-cream">
+        <section id="legacy-section" class="pb-24 px-6 md:px-12 relative bg-brand-cream">
             <div class="max-w-4xl mx-auto text-center" data-speed="0.9">
                 <span class="text-brand-orange text-xs uppercase tracking-widest font-bold mb-6 block reveal-on-scroll">Our Legacy</span>
                 <h2 class="font-serif text-4xl md:text-5xl text-brand-dark mb-8 leading-tight reveal-on-scroll">
@@ -400,19 +400,79 @@
     <!-- ============================================== -->
     <main id="healing" class="page-section">
         <header class="h-[70vh] relative bg-brand-dark flex items-center justify-center">
-            <img src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?q=80&w=1932&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover opacity-50" alt="Kottayam">
-            <div class="relative z-10 text-center text-white">
-                <span class="bg-brand-orange px-3 py-1 text-[10px] uppercase tracking-widest font-bold mb-6 inline-block">The Roots</span>
-                <h1 class="font-serif text-6xl md:text-8xl">Devivilasam Kottayam</h1>
+            <img src="https://images.unsplash.com/photo-1596806082677-a7f4d86515d2?q=80&w=1170&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover opacity-60" alt="Nature Meditation">
+            <div class="absolute inset-0 bg-brand-black/45"></div>
+            <div class="relative z-10 text-center text-white px-6 md:px-12">
+                <h1 class="font-serif text-5xl md:text-7xl leading-tight mb-6">Ayurvedic Treatment in Kottayam, Kerala</h1>
+                <p class="text-lg md:text-2xl font-light max-w-3xl mx-auto">Devivilasam Champakara Ayurveda offers structured Ayurvedic diagnosis and treatment in Kottayam, Kerala - continuing a seven-generation healing tradition.</p>
             </div>
         </header>
-        <section class="py-32 px-6 md:px-12 bg-brand-cream text-center">
-            <div class="max-w-3xl mx-auto">
-                <h2 class="font-serif text-4xl text-brand-dark mb-8">Authentic Heritage Healing</h2>
-                <p class="text-xl text-brand-black/70 leading-relaxed font-light">Located in the heart of the backwaters, this is where our lineage began.</p>
-                <div class="mt-12"><button onclick="transitionToPage('home')" class="text-xs uppercase tracking-widest border-b border-brand-dark pb-1 hover-trigger">Back to Home</button></div>
+
+        <section class="py-20 px-6 md:px-12 bg-white text-center">
+            <div class="max-w-4xl mx-auto">
+                <span class="text-brand-orange text-xs uppercase tracking-widest font-bold mb-4 block">PHILOSOPHY</span>
+                <p class="text-brand-dark text-lg md:text-xl font-light leading-relaxed mb-4">Healing begins with detailed Ayurvedic consultation, understanding constitution and imbalance before prescribing therapies.</p>
+                <p class="text-brand-dark text-lg md:text-xl font-light leading-relaxed">Complementary Homeopathy supports integrated patient care.</p>
             </div>
         </section>
+
+        <section class="py-20 px-6 md:px-12 bg-brand-cream">
+            <div class="max-w-7xl mx-auto">
+                <div class="mb-10 text-center">
+                    <h2 class="font-serif text-4xl md:text-5xl text-brand-dark mb-4">Treatment Packages</h2>
+                    <p class="text-brand-black/70 max-w-3xl mx-auto">Explore programs mapped to our core areas of care, each tailored for your condition and wellness goals.</p>
+                    <p class="text-xs text-brand-sage uppercase tracking-widest mt-2">Swipe or tap a card to reveal package details</p>
+                </div>
+                <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                    <article class="package-card group bg-white rounded-xl shadow-sm overflow-hidden border border-brand-dark/10">
+                        <img src="https://placehold.co/400x240?text=Panchakarma" class="w-full h-44 object-cover" alt="Panchakarma & Detoxification">
+                        <div class="p-6">
+                            <h3 class="font-serif text-2xl mb-3">Panchakarma & Detoxification</h3>
+                            <p class="package-desc text-gray-600 text-sm leading-relaxed">Deep cleansing and metabolic reset therapies designed by classical Ayurvedic protocols for sustainable long-term wellbeing.</p>
+                        </div>
+                    </article>
+                    <article class="package-card group bg-white rounded-xl shadow-sm overflow-hidden border border-brand-dark/10">
+                        <img src="https://placehold.co/400x240?text=Orthopaedic" class="w-full h-44 object-cover" alt="Orthopaedic Ayurvedic Treatment">
+                        <div class="p-6">
+                            <h3 class="font-serif text-2xl mb-3">Orthopaedic Ayurvedic Treatment</h3>
+                            <p class="package-desc text-gray-600 text-sm leading-relaxed">Joint, spine and musculoskeletal healing with medicated oils, poultices and rehabilitative routines.</p>
+                        </div>
+                    </article>
+                    <article class="package-card group bg-white rounded-xl shadow-sm overflow-hidden border border-brand-dark/10">
+                        <img src="https://placehold.co/400x240?text=Geriatric" class="w-full h-44 object-cover" alt="Geriatric & Lifestyle Disorder Management">
+                        <div class="p-6">
+                            <h3 class="font-serif text-2xl mb-3">Geriatric & Lifestyle Management</h3>
+                            <p class="package-desc text-gray-600 text-sm leading-relaxed">Holistic programs for chronic conditions and age-related health restoration, guided by practical lifestyle medicine.</p>
+                        </div>
+                    </article>
+                    <article class="package-card group bg-white rounded-xl shadow-sm overflow-hidden border border-brand-dark/10">
+                        <img src="https://placehold.co/400x240?text=Pediatric" class="w-full h-44 object-cover" alt="Pediatric Ayurveda">
+                        <div class="p-6">
+                            <h3 class="font-serif text-2xl mb-3">Pediatric Ayurveda (Bala Chikitsa)</h3>
+                            <p class="package-desc text-gray-600 text-sm leading-relaxed">Gentle, age-appropriate care for children’s immunity, growth and mental balance using trusted classical protocols.</p>
+                        </div>
+                    </article>
+                    <article class="package-card group bg-white rounded-xl shadow-sm overflow-hidden border border-brand-dark/10">
+                        <img src="https://placehold.co/400x240?text=Post+Natal" class="w-full h-44 object-cover" alt="Post Natal Ayurvedic Care">
+                        <div class="p-6">
+                            <h3 class="font-serif text-2xl mb-3">Post Natal Ayurvedic Care</h3>
+                            <p class="package-desc text-gray-600 text-sm leading-relaxed">Rejuvenation and balancing therapy for mother and child after delivery, backed by prasava raksha chikitsa technique.</p>
+                        </div>
+                    </article>
+                    <article class="package-card group bg-white rounded-xl shadow-sm overflow-hidden border border-brand-dark/10">
+                        <img src="https://placehold.co/400x240?text=Manasika" class="w-full h-44 object-cover" alt="Manasika Roga & Mental Wellness">
+                        <div class="p-6">
+                            <h3 class="font-serif text-2xl mb-3">Manasika Roga & Mental Wellness</h3>
+                            <p class="package-desc text-gray-600 text-sm leading-relaxed">Integrated mental health support combining Ayurveda and counselling for emotional balance and resilience.</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <div class="py-12 text-center">
+            <button onclick="transitionToPage('home')" class="text-xs uppercase tracking-widest border-b border-brand-dark pb-1 hover-trigger">Back to Home</button>
+        </div>
     </main>
 
     <!-- ============================================== -->
@@ -526,6 +586,130 @@
                 <div class="mt-12"><button onclick="transitionToPage('home')" class="text-xs uppercase tracking-widest border-b border-brand-dark pb-1 hover-trigger">Back to Home</button></div>
             </div>
         </section>
+    </main>
+
+    <!-- ============================================== -->
+    <!-- SUBPAGE 4: LEGACY -->
+    <!-- ============================================== -->
+    <main id="legacy" class="page-section">
+        <header class="relative w-full h-screen overflow-hidden bg-brand-black">
+            <div class="absolute inset-0 z-0">
+                <video id="hero-video" autoplay muted playsinline class="hero-video opacity-70" data-speed="0.5">
+                    <source src="assets/videos/background.mp4" type="video/mp4">
+                </video>
+                <div class="absolute inset-0 bg-gradient-to-t from-brand-dark/90 via-transparent to-black/30"></div>
+            </div>
+            <div class="relative z-10 h-full flex flex-col justify-end pb-32 px-6 md:px-12 max-w-7xl mx-auto">
+                <p class="text-brand-orange text-xs uppercase tracking-widest-xl mb-4 reveal-text">Legacy</p>
+                <h1 class="font-serif text-display text-white leading-none mb-6">
+                    <div class="line-reveal"><span>Seven Generations of</span></div>
+                    <div class="line-reveal"><span>Traditional Kerala Ayurveda</span></div>
+                </h1>
+                <p class="text-white/80 max-w-xl text-lg font-light reveal-text delay-200">
+                    Devivilasam Champakara Ayurveda represents an unbroken Kerala Ayurvedic lineage serving communities for over seven generations.
+                </p>
+            </div>
+        </header>
+
+        <!-- Foundations -->
+        <section class="py-32 px-6 md:px-12 bg-brand-cream">
+            <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+                <div>
+                    <span class="text-brand-orange text-xs uppercase tracking-widest font-bold mb-4 block">Foundations</span>
+                    <h2 class="font-serif text-4xl md:text-5xl text-brand-dark mb-8">The Early Roots of the Lineage</h2>
+                    <p class="text-brand-black/70 text-lg font-light leading-relaxed">
+                        The origins of Devivilasam Champakara Ayurveda trace back to the classical Ayurvedic traditions of the Champakara-Karukachal regions of Kerala.<br><br>
+                        Krishna Vaidhyar, a prominent physician of the late 18th to early 19th century, was known for his commitment to classical Ayurvedic healing. Alongside him, Kutti Pennu, a respected Prasuthi Karmani, specialized in prasava riksha chikitsa and assisted in the delivery and care of countless children in the region.<br><br>
+                        These early generations established a tradition grounded in service, maternal care, pediatric healing, and community trust - forming the foundation of the lineage.
+                    </p>
+                </div>
+                <div class="overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?q=80&w=2070&auto=format&fit=crop" 
+                         class="w-full h-[500px] object-cover hover:scale-105 transition-transform duration-1000" alt="Kerala Heritage">
+                </div>
+            </div>
+        </section>
+
+        <!-- Continuation -->
+        <section class="py-32 px-6 md:px-12 bg-white">
+            <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+                <div class="overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?q=80&w=1935&auto=format&fit=crop" 
+                         class="w-full h-[500px] object-cover hover:scale-105 transition-transform duration-1000" alt="Modern Ayurveda">
+                </div>
+                <div>
+                    <span class="text-brand-orange text-xs uppercase tracking-widest font-bold mb-4 block">Continuation</span>
+                    <h2 class="font-serif text-4xl md:text-5xl text-brand-dark mb-8">Sustaining the Vaidya Parampara</h2>
+                    <p class="text-brand-black/70 text-lg font-light leading-relaxed">
+                        The lineage continued through Kumaran Vaidyar, a Traditional Kerala Ayurveda practitioner who served from 1945 to 2000. Highly respected for Bala Chikitsa, he cared for generations of families across Champakara and Kurukachal in Kottayam district.<br><br>
+                        His practice preserved classical diagnostic discipline and therapeutic integrity, ensuring that the Ayurvedic knowledge passed down through generations remained authentic and community-centered.<br><br>
+                        Through him, the parampara moved from historical roots into structured modern continuity.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Parallel Lineage -->
+        <section class="py-32 px-6 md:px-12 bg-brand-cream">
+            <div class="max-w-7xl mx-auto grid md:grid-cols-1 gap-16 items-center text-center">
+                <div>
+                    <span class="text-brand-orange text-xs uppercase tracking-widest font-bold mb-4 block">Parallel Lineage</span>
+                    <h2 class="font-serif text-4xl md:text-5xl text-brand-dark mb-8">Expanding the Heritage</h2>
+                    <p class="text-brand-black/70 text-lg font-light leading-relaxed">
+                        The ancestral heritage of Dr. Sreekala Suresh further strengthens the medical foundation of Devivilasam.<br><br>
+                        Padmanabhan Vaidyar (Pappu Vaidyar) (1915-1975), founder of Sahithya Southam Sanskrit Ayurveda School and Arogya Sandayini Ayurvedashala in Haripad, was renowned for Visha Chikitsa, cancer care, and geriatric treatment across Alappuzha and Kollam districts.<br><br>
+                        Dr. C.K. Sukumaran (DHMS), retired Professor at Government Homoeopathic College, Calicut, expanded the lineage through extensive Homoeopathic practice in Kannur district.<br><br>
+                        Mullankuzhiyil Gopalan Vaidyar and K. Kamalakshi (Vayamma) were respected for manasika roga chikitsa, geriatric care, and prasuthi services in the Kottiyam region.<br><br>
+                        Together, this parallel lineage enriched Devivilasam with broader clinical depth and homoeopathic scholarship.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modern Integration -->
+        <section class="py-32 px-6 md:px-12 bg-white">
+            <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+                <div>
+                    <span class="text-brand-orange text-xs uppercase tracking-widest font-bold mb-4 block">Modern Integration</span>
+                    <h2 class="font-serif text-4xl md:text-5xl text-brand-dark mb-8">Ayurveda & Homoeopathy in Clinical Practice</h2>
+                    <p class="text-brand-black/70 text-lg font-light leading-relaxed">
+                        Dr. P.N. Suresh (OHMS, RAMS)<br>
+                        Chief Physician - Devivilasam Ayurveda<br><br>
+                        The first in Kerala to formally graduate in both Homoeopathy (OHMS) and Ayurveda (RAMS), Dr. P.N. Suresh brings over 44 years of clinical experience. He is widely respected for orthocare management, geriatric care, pediatric cases, and lifestyle disorder treatment across the Kottayam region.<br><br>
+                        Dr. Sreekala Suresh (DHMS, MSc Psychology)<br>
+                        CEO - Devivilasam Ayurveda | Founder - AyurSanctuary Wellness<br><br>
+                        With over 30 years of Homoeopathic practice, Dr. Sreekala Suresh specializes in geriatric care, manasika roga chikitsa, and structured counselling. Her work integrates clinical Homoeopathy with psychological expertise to provide holistic, patient-centered care.
+                    </p>
+                </div>
+                <div class="overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1526256262350-7da7584cf5eb?q=80&w=2070&auto=format&fit=crop"
+                         class="w-full h-[500px] object-cover hover:scale-105 transition-transform duration-1000" alt="Modern Clinic">
+                </div>
+            </div>
+        </section>
+
+        <!-- Current Generation Leadership -->
+        <section class="py-32 px-6 md:px-12 bg-brand-cream">
+            <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+                <div class="overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1545239351-1141bd82e8a6?q=80&w=2070&auto=format&fit=crop"
+                         class="w-full h-[500px] object-cover hover:scale-105 transition-transform duration-1000" alt="Modern Ayurveda Practice">
+                </div>
+                <div>
+                    <span class="text-brand-orange text-xs uppercase tracking-widest font-bold mb-4 block">Current Generation</span>
+                    <h2 class="font-serif text-4xl md:text-5xl text-brand-dark mb-8">Next-Gen Care Leadership</h2>
+                    <p class="text-brand-black/70 text-lg font-light leading-relaxed">
+                        Dr. Thejus Nandu S (DAMS), Manager and Physician at Devivilasam Ayurveda and AyurSanctuary Wellness, represents the current generation of the lineage. Guided by classical Ayurvedic training and modern clinical practice, he continues the family's disciplined approach to care.<br><br>
+                        Dr. Arya Babu K (DAMS) leads the Post-Natal Care Department at Devivilasam and serves as CEO of AyurSanctuary Wellness. Her focus lies in prasava raksha chikitsa and structured post-natal Ayurvedic care.
+                    </p>
+                </div>
+            </div>
+            <div class="mt-12 text-center">
+                <button onclick="transitionToPage('home')" class="text-xs uppercase tracking-widest border-b border-brand-dark pb-1 hover-trigger">Back to Home</button>
+            </div>
+        </section>
+
+
     </main>
 
     <!-- Booking Modal (Formspree) -->
