@@ -473,97 +473,107 @@
         <div class="py-12 text-center">
             <button onclick="transitionToPage('home')" class="text-xs uppercase tracking-widest border-b border-brand-dark pb-1 hover-trigger">Back to Home</button>
         </div>
+
+        <!-- Footer for Subpages -->
+        <footer class="py-32 bg-brand-dark text-white text-center px-6 md:px-12">
+            <div class="max-w-4xl mx-auto">
+                <h3 class="font-serif text-4xl mb-6">Devivilasam Champakara Ayurveda</h3>
+                <p class="text-sm opacity-70 uppercase tracking-widest">Kottayam, Kerala | Munnar, Kerala</p>
+            </div>
+        </footer>
     </main>
 
     <!-- ============================================== -->
     <!-- SUBPAGE 2: WELLNESS -->
     <!-- ============================================== -->
     <main id="wellness" class="page-section wrap-break-word break-all">
+        <!-- Hero Section -->
         <header class="h-[90vh] relative bg-brand-black flex items-center justify-center">
             <img src="https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?q=80&w=1935&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover opacity-70" alt="Munnar Resort">
-            <div class="relative z-10 text-center text-white p-6">
-                <h1 class="font-serif text-7xl md:text-9xl mb-4">AyurSanctuary</h1>
-                <p class="text-xl font-light tracking-wide text-brand-sage">Munnar Wellness Resort</p>
+            <div class="absolute inset-0 bg-gradient-to-t from-brand-dark/90 via-transparent to-black/30"></div>
+            <div class="relative z-10 text-center text-white px-6 md:px-12 max-w-3xl">
+                <h1 class="font-serif text-5xl md:text-7xl leading-tight mb-6">Ayurvedic Wellness Retreat in Munnar, Kerala</h1>
+                <p class="text-lg md:text-xl font-light leading-relaxed">AyurSanctuary Munnar offers physician-guided Panchakarama and structured Ayurvedic wellness programs within a natural retreat environment.</p>
             </div>
         </header>
-        <section class="py-32 px-6 md:px-12 bg-white text-center">
-            <div class="max-w-3xl mx-auto">
-                <span class="text-brand-orange text-xs uppercase tracking-widest font-bold block mb-4">The Elevation</span>
-                <p class="text-2xl md:text-3xl font-serif text-brand-dark leading-relaxed">"Where misty mountains meet modern luxury."</p>
-            </div>
-        </section>
 
-        <!-- Packages (with images + 1-2 sentence) -->
-        <section class="py-24 bg-brand-cream px-6 md:px-12">
-            <div class="max-w-7xl mx-auto">
-                <h3 class="font-serif text-4xl text-brand-dark mb-16">Wellness Packages</h3>
-                <div class="grid md:grid-cols-3 gap-8">
-                    <!-- Pkg 1 -->
-                    <div class="bg-white p-8 shadow-sm hover:shadow-xl transition-shadow duration-500 hover-trigger">
-                        <img src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=2070&auto=format&fit=crop" class="w-full h-56 object-cover mb-8" alt="Detox">
-                        <h4 class="font-serif text-2xl mb-3">The Detox Week</h4>
-                        <p class="text-sm text-gray-600 leading-relaxed">A comprehensive 7-day program focused on deep cleansing and metabolic reset through authentic Panchakarma protocols and yoga.</p>
-                    </div>
-                    <!-- Pkg 2 -->
-                    <div class="bg-white p-8 shadow-sm hover:shadow-xl transition-shadow duration-500 hover-trigger">
-                        <img src="https://images.unsplash.com/photo-1579126038374-6064e9370f0f?q=80&w=2031&auto=format&fit=crop" class="w-full h-56 object-cover mb-8" alt="Stress">
-                        <h4 class="font-serif text-2xl mb-3">Digital Detox</h4>
-                        <p class="text-sm text-gray-600 leading-relaxed">Disconnect to reconnect in our tech-free zones. Experience mental clarity through Shirodhara and guided meditation sessions.</p>
-                    </div>
-                    <!-- Pkg 3 -->
-                    <div class="bg-white p-8 shadow-sm hover:shadow-xl transition-shadow duration-500 hover-trigger">
-                        <img src="https://images.unsplash.com/photo-1515377905703-c4788e51af15?q=80&w=2073&auto=format&fit=crop" class="w-full h-56 object-cover mb-8" alt="Beauty">
-                        <h4 class="font-serif text-2xl mb-3">Radiance</h4>
-                        <p class="text-sm text-gray-600 leading-relaxed">Rejuvenate your skin and vitality with our anti-aging therapies using rare herbal formulations and specialized massages.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Rooms -->
+        <!-- Wellness Philosophy Section -->
         <section class="py-32 px-6 md:px-12 bg-white">
+            <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+                <div>
+                    <h2 class="font-serif text-4xl md:text-5xl text-brand-dark mb-8 leading-tight">Wellness Philosophy</h2>
+                    <p class="text-brand-black/70 text-lg font-light leading-relaxed">AyurSanctuary is our Ayurvedic wellness retreat in Munnar, Kerala. We move beyond the spa concept to offer physician-guided, result-oriented therapies that respect the authenticity of classical Ayurveda while providing the comfort of a retreat environment.</p>
+                </div>
+                <div class="overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=2070&auto=format&fit=crop" class="w-full h-[500px] object-cover hover:scale-105 transition-transform duration-1000" alt="People Meditating on Beach">
+                </div>
+            </div>
+        </section>
+
+        <!-- Programs Section -->
+        <section class="py-32 px-6 md:px-12 bg-brand-cream">
             <div class="max-w-7xl mx-auto">
-                <div class="grid md:grid-cols-2 gap-16 items-center">
-                    <div class="overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?q=80&w=2070&auto=format&fit=crop" 
-                             class="w-full h-[500px] object-cover hover:scale-105 transition-transform duration-1000" alt="Room">
+                <h2 class="font-serif text-4xl md:text-5xl text-brand-dark mb-16 text-center">Our Programs</h2>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Program 1 -->
+                    <div class="bg-white overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-500 hover-trigger">
+                        <img src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=2070&auto=format&fit=crop" class="w-full h-64 object-cover" alt="Panchakarma">
+                        <div class="p-8">
+                            <h3 class="font-serif text-2xl text-brand-dark mb-3">Pancharakama in Munnar</h3>
+                        </div>
                     </div>
-                    <div>
-                        <h3 class="font-serif text-4xl text-brand-dark mb-6">Valley View Suite</h3>
-                        <p class="text-gray-600 mb-8 text-lg font-light">Panoramic views of the tea plantations. Includes private balcony and jacuzzi for post-treatment relaxation.</p>
-                        <ul class="text-sm text-brand-sage space-y-4 mb-10 font-medium uppercase tracking-wider">
-                            <li>• King Size Bed</li>
-                            <li>• Private Butler</li>
-                            <li>• In-room Herbal Bath</li>
-                            <li>• Daily Yoga Session</li>
-                        </ul>
-                        <button class="btn-action px-10 py-4 text-xs uppercase font-bold hover-trigger">Check Availability</button>
+                    <!-- Program 2 -->
+                    <div class="bg-white overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-500 hover-trigger">
+                        <img src="https://images.unsplash.com/photo-1579126038374-6064e9370f0f?q=80&w=2031&auto=format&fit=crop" class="w-full h-64 object-cover" alt="Detox">
+                        <div class="p-8">
+                            <h3 class="font-serif text-2xl text-brand-dark mb-3">Ayurvedic Detox Programs</h3>
+                        </div>
+                    </div>
+                    <!-- Program 3 -->
+                    <div class="bg-white overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-500 hover-trigger">
+                        <img src="https://images.unsplash.com/photo-1555252333-9f8e92e65df9?q=80&w=2070&auto=format&fit=crop" class="w-full h-64 object-cover" alt="Post-Natal">
+                        <div class="p-8">
+                            <h3 class="font-serif text-2xl text-brand-dark mb-3">Post-Natal Wellness Care</h3>
+                        </div>
+                    </div>
+                    <!-- Program 4 -->
+                    <div class="bg-white overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-500 hover-trigger">
+                        <img src="https://images.unsplash.com/photo-1515377905703-c4788e51af15?q=80&w=2073&auto=format&fit=crop" class="w-full h-64 object-cover" alt="Stress">
+                        <div class="p-8">
+                            <h3 class="font-serif text-2xl text-brand-dark mb-3">Stress & Lifestyle Rebalancing</h3>
+                        </div>
+                    </div>
+                    <!-- Program 5 -->
+                    <div class="bg-white overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-500 hover-trigger">
+                        <img src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?q=80&w=2070&auto=format&fit=crop" class="w-full h-64 object-cover" alt="Preventive">
+                        <div class="p-8">
+                            <h3 class="font-serif text-2xl text-brand-dark mb-3">Preventive Wellness Programs</h3>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Testimonials (Added per request) -->
-        <section class="py-32 bg-brand-stone text-center px-6">
-            <div class="max-w-3xl mx-auto">
-                <i data-lucide="star" class="w-6 h-6 text-brand-orange mx-auto mb-6 fill-current"></i>
-                <p class="font-serif text-3xl text-brand-dark mb-8 leading-relaxed">"The most peaceful week of my life. The service is impeccable, and the treatments are deeply transformative."</p>
-                <div class="flex flex-col items-center">
-                    <p class="text-sm font-bold uppercase tracking-widest text-brand-black">James T.</p>
-                    <p class="text-xs text-brand-sage">New York</p>
-                </div>
+        <!-- Residential Experience -->
+        <section class="py-32 px-6 md:px-12 bg-white">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="font-serif text-4xl md:text-5xl text-brand-dark mb-8 leading-tight">Residential Experience</h2>
+                <p class="text-brand-black/70 text-lg font-light leading-relaxed">AyurSanctuary provides comfortable resort-based accommodation in Munnar, Kerala, allowing guests to undergo Ayurvedic treatment and Panchakarama programs within a calm, nature-integrated environment.</p>
             </div>
         </section>
 
-        <!-- Contact Info (Added per request) -->
-        <section class="py-32 bg-brand-dark text-white text-center px-6">
-            <h3 class="font-serif text-4xl mb-8">Plan Your Retreat</h3>
-            <p class="mb-2 font-serif text-3xl">+91 984 700 9999</p>
-            <p class="text-sm opacity-70 uppercase tracking-widest mb-12">munnar@devivilasam.com</p>
-            <div>
-                 <button onclick="transitionToPage('home')" class="text-xs uppercase tracking-widest border-b border-white pb-1 hover:text-brand-orange hover:border-brand-orange transition-colors hover-trigger">Back to Home</button>
+        <!-- Back to Home Button -->
+        <div class="py-12 text-center bg-white">
+            <button onclick="transitionToPage('home')" class="text-xs uppercase tracking-widest border-b border-brand-dark pb-1 hover:text-brand-orange hover:border-brand-orange transition-colors hover-trigger text-brand-dark">Back to Home</button>
+        </div>
+
+        <!-- Footer for Subpages -->
+        <footer class="py-32 bg-brand-dark text-white text-center px-6 md:px-12">
+            <div class="max-w-4xl mx-auto">
+                <h3 class="font-serif text-4xl mb-6">Devivilasam Champakara Ayurveda</h3>
+                <p class="text-sm opacity-70 uppercase tracking-widest">Kottayam, Kerala | Munnar, Kerala</p>
             </div>
-        </section>
+        </footer>
     </main>
 
     <!-- ============================================== -->
@@ -586,6 +596,14 @@
                 <div class="mt-12"><button onclick="transitionToPage('home')" class="text-xs uppercase tracking-widest border-b border-brand-dark pb-1 hover-trigger">Back to Home</button></div>
             </div>
         </section>
+
+        <!-- Footer for Subpages -->
+        <footer class="py-32 bg-brand-dark text-white text-center px-6 md:px-12">
+            <div class="max-w-4xl mx-auto">
+                <h3 class="font-serif text-4xl mb-6">Devivilasam Champakara Ayurveda</h3>
+                <p class="text-sm opacity-70 uppercase tracking-widest">Kottayam, Kerala | Munnar, Kerala</p>
+            </div>
+        </footer>
     </main>
 
     <!-- ============================================== -->
@@ -709,7 +727,13 @@
             </div>
         </section>
 
-
+        <!-- Footer for Subpages -->
+        <footer class="py-32 bg-brand-dark text-white text-center px-6 md:px-12">
+            <div class="max-w-4xl mx-auto">
+                <h3 class="font-serif text-4xl mb-6">Devivilasam Champakara Ayurveda</h3>
+                <p class="text-sm opacity-70 uppercase tracking-widest">Kottayam, Kerala | Munnar, Kerala</p>
+            </div>
+        </footer>
     </main>
 
     <!-- Booking Modal (Formspree) -->
